@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #c1e6e9;
+  --foreground: #8e613c;
+}
+
+.background {
+  background-image: url('/images/fundoPixel.png');
+  background-size: fill;
+  background-repeat: no-repeat;
+}
+body {
+  color: var(--foreground);
+}
