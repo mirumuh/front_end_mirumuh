@@ -22,6 +22,22 @@ module.exports = {
       maxHeight: {
         screenHeader: '70vh',
       },
+      height: {
+        screenHeader: '70vh',
+        96: '24rem',
+        128: '32rem',
+        144: '36rem',
+        160: '40rem',
+        192: '48rem',
+      },
+      minHeight: {
+        screenHeader: '70vh',
+        96: '24rem',
+        128: '32rem',
+        144: '36rem',
+        160: '40rem',
+        192: '48rem',
+      },
     },
   },
   plugins: [],
