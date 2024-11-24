@@ -1,26 +1,26 @@
-import "./globals.css";
-import { Poppins } from "next/font/google";
+import Header from './components/Header'
+import './globals.css'
+import { Poppins } from 'next/font/google'
 
 const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], 
-});
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+})
 
 export const metadata = {
-  title: "Ateliê da Mirumuh",
-};
+  title: 'Ateliê da Mirumuh',
+}
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={poppins.className}>
+    <html lang='en' className={poppins.className}>
       <head>
-        <link rel="icon" href="/icons/iconMirumuh_topRosa_marrom.png" />
+        <link rel='icon' href='/icons/iconMirumuh_topRosa_marrom.png' />
       </head>
-      <body
-        className={` antialiased background`}
-      >
+      <body className={` antialiased background`}>
+        <Header />
         {children}
       </body>
     </html>
-  );
+  )
 }

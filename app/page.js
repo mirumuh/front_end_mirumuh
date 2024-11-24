@@ -3,8 +3,10 @@ import Header from './components/Header'
 
 const Home = () => {
   return (
-    <div>
-      <Header />
+    <div className='w-full px-60 py-20'>
+      <div className='flex flex-col gap-10 w-full bg-white px-40 py-20 overflow-y-auto h-144'>
+        <h1>Home</h1>
+      </div>
     </div>
   )
 }
