@@ -15,6 +15,8 @@ module.exports = {
         pink: '#ffbbdc',
         bege: '#FFFBDB',
         blue: '#C2E5E9',
+        'light-darker-blue': '#9cdfea',
+        'light-darker-brown': '#8d6741',
       },
       backgroundImage: {
         fundo: "url('/images/fundoPixel.png')",
