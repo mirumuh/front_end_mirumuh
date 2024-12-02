@@ -13,6 +13,7 @@ module.exports = {
         primary: '#c1e6e9',
         secondary: '#c2eb7d',
         pink: '#ffbbdc',
+        'light-pink': '#ffe3e3',
         bege: '#FFFBDB',
         blue: '#C2E5E9',
         'light-darker-blue': '#9cdfea',

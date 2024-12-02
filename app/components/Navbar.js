@@ -6,22 +6,26 @@ const Navbar = ({ variant }) => {
     { label: 'Receitas', path: '/receitas', disabled: false },
     { label: 'Amigurumis', path: '/', disabled: true },
     { label: 'Artes', path: '/', disabled: true },
-    { label: 'Sobre', path: '/', disabled: true },
+    { label: 'Sobre', path: '/', disabled: false },
     { label: 'Login', path: '/', disabled: true },
   ]
   return (
     <nav className='flex gap-20 font-semibold uppercase justify-center'>
       {navItems.map((item, index) => (
-        <Link
-          href={item.path}
-          key={index}
-          disabled={item.disabled}
-          className={`p-2 hover:bg-bege rounded-2xl  ${
-            item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-          }`}
-        >
-          {item.label}
-        </Link>
+        <>
+          {!item.disabled && (
+            <Link
+              href={item.path}
+              key={index}
+              disabled={item.disabled}
+              className={`p-2 hover:bg-bege rounded-2xl  ${
+                item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
+            >
+              {item.label}
+            </Link>
+          )}
+        </>
       ))}
     </nav>
   )

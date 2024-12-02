@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel='icon' href='/icons/iconMirumuh_topRosa_marrom.png' />
       </head>
-      <body className={` antialiased background`}>
+      <body className={`antialiased background overflow-hidden`}>
         <Header />
         {children}
       </body>

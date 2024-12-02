@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Button from './Button'
+import Link from 'next/link'
 
 const Receita = ({ image, linkTo, nomeReceita, descricaoReceita }) => {
   return (
@@ -18,7 +18,12 @@ const Receita = ({ image, linkTo, nomeReceita, descricaoReceita }) => {
         <h2 className='font-semibold'>Nome da Receita</h2>
         <p>Descrição da Receita</p>
       </div>
-      <Button label='Ver Receita' />
+      <Link
+        href={'/produtos'}
+        className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl w-min shadow whitespace-nowrap h-min '
+      >
+        Ver Receita
+      </Link>
     </div>
   )
 }
