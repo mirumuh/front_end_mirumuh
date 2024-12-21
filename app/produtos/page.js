@@ -1,7 +1,16 @@
+'use client'
+
 import Image from 'next/image'
 import Button from '../components/Button'
+import { useRouter } from 'next/navigation'
 
 const Produtos = () => {
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <div className='flex justify-between items-center px-60 pt-14 pb-16 w-full gap-20 '>
       <div className='flex flex-col w-1/2 gap-16'>
@@ -52,15 +61,31 @@ const Produtos = () => {
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-5 p-5 bg-white shadow-lg w-1/2 min-h-144 rounded-lg'>
-        <div className='self-start'>voltar</div>
-        <div className='flex flex-col justify-center items-center gap-10'>
+      <div className='flex flex-col gap-20 p-5 bg-white shadow-lg w-1/2 min-h-144 rounded-lg'>
+        <button
+          className='self-start flex gap-2 items-center cursor-pointer'
+          onClick={handleBack}
+        >
+          <Image
+            src='/icons/arrow.png'
+            alt='Imagem da Receita'
+            width={30}
+            height={30}
+          />
+          <span className='uppercase font-semibold text-sm hover:underline underline-offset-4'>
+            voltar
+          </span>
+        </button>
+        <div className='flex flex-col justify-center items-center gap-16 h-full'>
           <div className='flex flex-col gap-8'>
-            <span className='font-bold text-3xl'>Receita Teste 1 </span>
+            <span className='text-4xl font-moreSugar text-center'>
+              Cinamoroll teste receita 1
+            </span>
             <span>Descrição teste receit 1</span>
-            <span>R$ 100,00</span>
+            <span className='font-bold text-xl font-moreSugarThin '>
+              R$ 100,00
+            </span>
           </div>
-
           <Button label='Comprar' variant={'brown'} />
         </div>
       </div>

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -7,6 +8,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        moreSugar: ['MoreSugar', 'sans-serif'],
+        moreSugarExtras: ['MoreSugarExtras', 'sans-serif'],
+        moreSugarThin: ['MoreSugarThin', 'sans-serif'],
+      },
       colors: {
         background: 'var(--background)',
         foreground: '#bc915d',

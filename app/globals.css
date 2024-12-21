@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'MoreSugarThin';
+  src: url('/fonts/MoreSugar-Thin.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MoreSugar';
+  src: url('/fonts/MoreSugar-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MoreSugarExtras';
+  src: url('/fonts/MoreSugar-Extras.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 :root {
   --background: #c1e6e9;
   --foreground: #8e613c;
