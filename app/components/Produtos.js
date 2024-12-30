@@ -1,10 +1,16 @@
 'use client'
 
 import Image from 'next/image'
-import Button from '../components/Button'
 import { useRouter } from 'next/navigation'
+import Button from './Button'
 
-const Produtos = () => {
+const Produtos = ({
+  nomeProduto,
+  descricaoProduto,
+  precoProduto,
+  onClickBuy,
+  arrayImagens,
+}) => {
   const router = useRouter()
 
   const handleBack = () => {
@@ -79,14 +85,14 @@ const Produtos = () => {
         <div className='flex flex-col justify-center items-center gap-16 h-full'>
           <div className='flex flex-col gap-8'>
             <span className='text-4xl font-moreSugar text-center'>
-              Cinamoroll teste receita 1
+              {nomeProduto}
             </span>
-            <span>Descrição teste receit 1</span>
+            <span>{descricaoProduto}</span>
             <span className='font-bold text-xl font-moreSugarThin '>
-              R$ 100,00
+              R$ {precoProduto}
             </span>
           </div>
-          <Button label='Comprar' variant={'brown'} />
+          <Button label='Comprar' variant={'brown'} onClick={onClickBuy} />
         </div>
       </div>
     </div>
