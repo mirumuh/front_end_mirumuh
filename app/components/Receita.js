@@ -2,14 +2,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
-  console.log(idReceita)
-  console.log(nomeReceita)
-
   return (
-    <div className='flex py-5 items-center px-8 gap-5 bg-white w-full min-h-40 rounded-3xl'>
-      <div className='flex border border-blue rounded-2xl p-3 w-32 h-32'>
+    <div className='flex flex-col gap-3 bg-white rounded-3xl shadow-lg p-4 sm:flex-row sm:gap-5 sm:items-center sm:py-5'>
+      <div className='flex items-center justify-center border border-blue rounded-2xl w-full h-32 sm:w-32 sm:h-32'>
         <Image
-          src='/icons/iconMirumuh_topRosa_marrom.png'
+          src={image[0]}
           alt='Imagem da Receita'
           width={100}
           height={100}
@@ -17,13 +14,18 @@ const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
         />
       </div>
 
-      <div className='flex flex-col gap-1 h-32 w-5/6 border border-blue p-3 rounded-2xl'>
-        <h2 className='font-semibold'>{nomeReceita}</h2>
-        <p>{descricaoReceita}</p>
+      <div className='flex flex-col gap-1 border border-blue rounded-2xl p-3 w-full  overflow-hidden sm:h-32'>
+        <h2 className='font-semibold text-sm sm:text-base'>
+          {nomeReceita}
+        </h2>
+        <p className='text-sm sm:text-base text-gray-700'>
+          {descricaoReceita}
+        </p>
       </div>
+
       <Link
         href={`/produtos/${idReceita}`}
-        className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl w-min shadow whitespace-nowrap h-min '
+        className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl shadow w-min whitespace-nowrap'
       >
         Ver Receita
       </Link>

@@ -44,3 +44,9 @@
 body {
   color: var(--foreground);
 }
+
+@media screen and (max-width: 768px) {
+  .background::before {
+    background-image: url('/images/fundoCelular.png');
+  }
+}

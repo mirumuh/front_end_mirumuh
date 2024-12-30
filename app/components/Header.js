@@ -6,7 +6,7 @@ import Link from 'next/link'
 const Header = () => {
   return (
     <header className='bg-light-pink flex flex-col justify-center w-full py-7 px-4 gap-8 shadow-md'>
-      <Link href={'/'} className='flex justify-center items-center'>
+      <Link href={'/sobre'} className='flex justify-center items-center'>
         <Image
           src='/icons/logoFullMarcado.png'
           alt='Ateliê da Mirumuh'

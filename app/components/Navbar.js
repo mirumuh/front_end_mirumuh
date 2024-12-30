@@ -6,7 +6,7 @@ const Navbar = ({ variant }) => {
     { label: 'Receitas', path: '/receitas', disabled: false },
     { label: 'Amigurumis', path: '/', disabled: true },
     { label: 'Artes', path: '/', disabled: true },
-    { label: 'Sobre', path: '/', disabled: false },
+    { label: 'Sobre', path: '/sobre', disabled: false },
     { label: 'Login', path: '/', disabled: true },
   ]
   return (

@@ -1,11 +1,11 @@
 'use client'
 import Receita from '../components/Receita'
-import { mockDataReceitas } from '../services/receitasData'
+import { mockDataReceitas } from '../../services/receitasData'
 
 const Receitas = () => {
   return (
-    <div className='w-full'>
-      <div className='flex flex-col gap-10 w-fuFll px-40 py-20 overflow-y-auto max-h-screenHeader'>
+    <div className='w-full h-screen overflow-y-auto'>
+      <div className='flex flex-col gap-5 px-5 py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14'>
         {mockDataReceitas.map(receita => (
           <Receita
             key={receita.idReceita}

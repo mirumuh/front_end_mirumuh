@@ -1,7 +1,7 @@
 'use client'
 
 import Produtos from '@/app/components/Produtos'
-import { mockDataReceitas } from '@/app/services/receitasData'
+import { mockDataReceitas } from '@/services/receitasData'
 import { useParams } from 'next/navigation'
 
 const ProdutoPage = () => {
