@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import Button from './Button'
+import BackButton from './BackButton'
 
 const Produtos = ({
   nomeProduto,
@@ -12,19 +12,18 @@ const Produtos = ({
   onClickBuy,
   arrayImagens,
 }) => {
-  const router = useRouter()
   const [selectedImage, setSelectedImage] = useState(arrayImagens[0])
-
-  const handleBack = () => {
-    router.back()
-  }
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   const renderImages = (images, size) => {
     return images.map((src, index) => (
       <div
         key={index}
         className={`bg-white w-full rounded-lg shadow-lg ${size} cursor-pointer`}
-        onClick={() => setSelectedImage(src)}
+        onClick={() => {
+          setSelectedImage(src)
+          setCurrentIndex(index)
+        }}
       >
         <div className='flex justify-center p-3'>
           <Image
@@ -38,6 +37,18 @@ const Produtos = ({
       </div>
     ))
   }
+  const handlePrevImage = () => {
+    const newIndex =
+      (currentIndex - 1 + arrayImagens.length) % arrayImagens.length
+    setSelectedImage(arrayImagens[newIndex])
+    setCurrentIndex(newIndex)
+  }
+
+  const handleNextImage = () => {
+    const newIndex = (currentIndex + 1) % arrayImagens.length
+    setSelectedImage(arrayImagens[newIndex])
+    setCurrentIndex(newIndex)
+  }
 
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
@@ -47,7 +58,8 @@ const Produtos = ({
           <div className='flex flex-col gap-5'>
             {renderImages(arrayImagens, 'min-h-32')}
           </div>
-          <div className='bg-white w-full h-128 rounded-lg shadow-lg flex justify-center items-center'>
+          <div className='bg-white w-full h-128 rounded-lg shadow-lg flex justify-center items-center gap-2'>
+            <Button label='&lt;' onClick={handlePrevImage} />
             <div className='flex justify-center p-3 items-center object-scale-down'>
               <Image
                 src={selectedImage}
@@ -57,23 +69,11 @@ const Produtos = ({
                 className='object-fill rounded-lg'
               />
             </div>
+            <Button label='&gt;' onClick={handleNextImage} />
           </div>
         </div>
         <div className='flex flex-col gap-16 p-5 bg-white shadow-lg w-1/2 min-h-144 rounded-lg'>
-          <button
-            className='self-start flex gap-2 items-center cursor-pointer'
-            onClick={handleBack}
-          >
-            <Image
-              src='/icons/arrow.png'
-              alt='Voltar'
-              width={30}
-              height={30}
-            />
-            <span className='uppercase font-semibold text-sm hover:underline underline-offset-4'>
-              voltar
-            </span>
-          </button>
+          <BackButton />
           <div className='flex flex-col justify-center items-center gap-10 h-full'>
             <div className='flex flex-col gap-8 px-5'>
               <span className='text-4xl font-moreSugar text-center'>
@@ -95,28 +95,20 @@ const Produtos = ({
       {/* Mobile */}
       <div className='block md:hidden w-full h-screenHeader overflow-y-auto px-5 py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14'>
         <div className='flex flex-col gap-5 bg-white shadow-lg min-h-144 rounded-lg p-5'>
-          <button
-            className='self-start flex gap-2 items-center cursor-pointer'
-            onClick={handleBack}
-          >
-            <Image
-              src='/icons/arrow.png'
-              alt='Voltar'
-              width={30}
-              height={30}
-            />
-            <span className='uppercase font-semibold text-sm hover:underline underline-offset-4'>
-              voltar
-            </span>
-          </button>
+          <BackButton />
           <div className='flex flex-col justify-center items-center gap-10 h-full'>
-            <div className='flex justify-center p-3'>
-              <Image
-                src={selectedImage}
-                alt='Imagem da Receita'
-                width={200}
-                height={200}
-              />
+            <div className='w-full h-128 flex justify-center items-center gap-10'>
+              <Button label='&lt;' onClick={handlePrevImage} />
+              <div className='flex justify-center p-3 items-center object-scale-down'>
+                <Image
+                  src={selectedImage}
+                  alt='Imagem da Receita'
+                  width={300}
+                  height={300}
+                  className='object-fill rounded-lg'
+                />
+              </div>
+              <Button label='&gt;' onClick={handleNextImage} />
             </div>
             <div className='flex flex-col gap-5 px-2'>
               <span className='text-4xl font-moreSugar text-center'>
