@@ -1,14 +1,6 @@
 'use client'
-import Header from './components/Header'
+import { redirect } from 'next/navigation'
 
-const Home = () => {
-  return (
-    <div className='w-full px-60 py-4'>
-      <div className='flex flex-col gap-10 w-full bg-white px-40 py-20 overflow-y-auto h-144'>
-        <h1>Home</h1>
-      </div>
-    </div>
-  )
+export default function Home() {
+  redirect('/sobre')
 }
-
-export default Home
