@@ -12,7 +12,7 @@ const Receitas = () => {
             idReceita={receita.idReceita}
             nomeReceita={receita.nomeReceita}
             descricaoReceita={receita.descricaoReceita}
-            image={receita.arrayImagens}
+            image={receita.cardReceita}
           />
         ))}
       </div>

@@ -6,12 +6,12 @@ const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
     <div className='flex flex-col gap-3 bg-white rounded-3xl shadow-lg p-4 sm:flex-row sm:gap-5 sm:items-center sm:py-5'>
       <div className='flex items-center justify-center border border-blue rounded-2xl w-full p-1 sm:w-32 sm:h-32 overflow-hidden'>
         <Image
-          src={image[0]}
+          src={image}
           alt='Imagem da Receita'
           width={100}
           height={100}
           style={{
-            transform: 'scale(1.7)',
+            transform: 'scale(1.5)',
             objectFit: 'fill',
           }}
         />
@@ -21,20 +21,15 @@ const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
         <h2 className='font-semibold text-sm sm:text-base'>
           {nomeReceita}
         </h2>
-        {/* <div className='flex gap-20'>
-          <div className='flex flex-col gap-1'>
-            <span className='text-sm sm:text-base'>R$ 25,00</span>
-            <span className='text-sm sm:text-base'> 19 páginas</span>
-          </div>
-          <div className='flex flex-col gap-1'>
-            <span className='text-sm sm:text-base'>
-              Versões: PTBR e US
-            </span>
-            <span className='text-sm sm:text-base'> Termos: US </span>
-          </div>
-        </div> */}
 
-        <p className='text-sm sm:text-base text-gray-700 '>
+        <p
+          className='text-sm sm:text-base text-gray-700 overflow-hidden text-ellipsis'
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: '3',
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
           {descricaoReceita}
         </p>
       </div>
