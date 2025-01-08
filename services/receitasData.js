@@ -3,7 +3,7 @@ const mockDataReceitas = [
     idReceita: 1,
     nomeReceita: 'Coelho Gélido Natalino/Icy Christmas Bunny',
     descricaoReceita:
-      'A receita conta com 19 páginas, imagens e orientações para que você possa ter maior facilidade em produzir seu próprio Glaceon Natalino. A receita tem duas versões: PTBR e US, mas ambas estão em termos US (sc, inc, dec...). A primeira parte contém orientações para a produção das partes, a segunda parte contém instruções para a costura e junção das peças, e também detalhes do amigurumi. Nas últimas páginas está a apreciação dos testers que ajudaram a construir a receita e entregar ela da melhor forma para vocês ',
+      'A receita conta com 19 páginas, imagens e orientações para que você possa ter maior facilidade em produzir seu próprio Glaceon Natalino. A receita tem duas versões: PTBR e US, mas ambas estão em termos US (sc, inc, dec...). A primeira parte contém orientações para a produção das partes, a segunda parte contém instruções para a costura e junção das peças, e também detalhes do amigurumi. Nas últimas páginas está a apreciação dos testers que ajudaram a construir a receita e entregar ela da melhor forma para vocês.',
     precoReceita: '25,00',
     cardReceita: '/produtos/coelhoGelidor.svg',
     arrayImagens: [
