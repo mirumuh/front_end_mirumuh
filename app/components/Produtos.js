@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Button from './Button'
 import BackButton from './BackButton'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Produtos = ({
   nomeProduto,
@@ -14,6 +15,7 @@ const Produtos = ({
 }) => {
   const [selectedImage, setSelectedImage] = useState(arrayImagens[0])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [language, setLanguage] = useState('pt-br')
 
   const renderImages = (images, size) => {
     return images.map((src, index) => (
@@ -83,6 +85,10 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {precoProduto}
               </span>
+              <LanguageSwitcher
+                language={language}
+                setLanguage={setLanguage}
+              />
             </div>
             <Button
               label='Comprar'
@@ -118,6 +124,10 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {precoProduto}
               </span>
+              <LanguageSwitcher
+                language={language}
+                setLanguage={setLanguage}
+              />
             </div>
             <Button
               label='Comprar'
