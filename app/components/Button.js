@@ -1,4 +1,4 @@
-const Button = ({ variant, label, onClick }) => {
+const Button = ({ variant, label, onClick, type }) => {
   const color =
     variant === 'brown'
       ? 'bg-foreground hover:bg-light-darker-brown text-white'
@@ -6,6 +6,7 @@ const Button = ({ variant, label, onClick }) => {
   return (
     <button
       onClick={onClick}
+      type={type || 'button'}
       className={`px-5 py-2 rounded-xl w-min shadow whitespace-nowrap h-min font-semibold  ${color}`}
     >
       {label}

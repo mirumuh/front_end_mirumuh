@@ -8,15 +8,15 @@ const LanguageSwitcher = ({ setLanguage, language }) => {
   return (
     <div>
       {/* Dropdown para selecionar o idioma */}
-      <div className='mb-4'>
-        <label htmlFor='language' className='mr-2 '>
-          Escolha o idioma / Choose a language:
+      <div className='mb-4 flex flex-col gap-5'>
+        <label htmlFor='language' className='font-semibold'>
+          Escolha o idioma do PDF / Choose a language for the PDF:
         </label>
         <select
           id='language'
           value={language}
           onChange={handleLanguageChange}
-          className='border rounded px-2 py-1'
+          className='border rounded p-2'
         >
           <option value='pt-br'>Português</option>
           <option value='eng'>English</option>

@@ -85,10 +85,11 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {precoProduto}
               </span>
+              {/* 
               <LanguageSwitcher
                 language={language}
                 setLanguage={setLanguage}
-              />
+              /> */}
             </div>
             <Button
               label='Comprar'
@@ -124,10 +125,10 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {precoProduto}
               </span>
-              <LanguageSwitcher
+              {/*  <LanguageSwitcher
                 language={language}
                 setLanguage={setLanguage}
-              />
+              /> */}
             </div>
             <Button
               label='Comprar'
