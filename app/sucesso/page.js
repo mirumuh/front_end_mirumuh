@@ -21,7 +21,8 @@ const Sucesso = () => {
           </div>
           <div className='flex justify-center items-center '>
             <p className='text-[16px] text-justify'>
-              Verifique seu e-mail para confirmar o recebimento do PDF.
+              Faça o download aqui ou verifique seu e-mail para confirmar o
+              recebimento do PDF.
             </p>
           </div>
         </div>

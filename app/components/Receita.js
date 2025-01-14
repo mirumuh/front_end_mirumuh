@@ -5,7 +5,7 @@ const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
   return (
     <div className='flex flex-col gap-3 bg-white rounded-3xl shadow-lg p-4 sm:flex-row sm:gap-5 sm:items-center sm:py-5'>
       <div className='flex items-center justify-center border border-blue rounded-2xl w-full p-1 sm:w-32 sm:h-32 overflow-hidden'>
-        <Image
+        {/*   <Image
           src={image}
           alt='Imagem da Receita'
           width={100}
@@ -14,7 +14,7 @@ const Receita = ({ image, idReceita, nomeReceita, descricaoReceita }) => {
             transform: 'scale(1.5)',
             objectFit: 'fill',
           }}
-        />
+        /> */}
       </div>
 
       <div className='flex flex-col gap-2 border border-blue rounded-2xl p-3 w-full  overflow-hidden sm:h-32'>

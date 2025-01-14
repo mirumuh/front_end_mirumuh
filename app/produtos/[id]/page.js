@@ -2,7 +2,7 @@
 
 import Modal from '@/app/components/Modal'
 import Produtos from '@/app/components/Produtos'
-import getProducts from '@/services/get-products'
+import getProductsWithPrice from '@/services/get-products'
 import { mockDataReceitas } from '@/services/receitasData'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -11,14 +11,15 @@ const ProdutoPage = () => {
   const { id } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProduto, setSelectedProduto] = useState(null)
+  const [allProducts, setAllProducts] = useState([])
+  const [productName, setProductName] = useState('')
+  const [productDescription, setProductDescription] = useState('')
+  const [productPrice, setProductPrice] = useState(0)
 
   const fetchProduto = async () => {
     try {
-      const response = await getProducts()
-        .then(response => console.log(response))
-        .catch(error => console.error(error))
-
-      console.log('Produtos:', response)
+      const response = await getProductsWithPrice()
+      setAllProducts(response)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
     }
@@ -28,11 +29,17 @@ const ProdutoPage = () => {
     fetchProduto()
   }, [])
 
-  const produto = mockDataReceitas.find(
-    receita => receita.idReceita === Number(id)
-  )
+  useEffect(() => {
+    const produto = allProducts.find(receita => receita.id === id)
+    if (produto) {
+      setProductName(produto.name)
+      setProductDescription(produto.description)
+      setProductPrice(produto.prices[0].amount)
+    }
+  }, [allProducts, id])
 
   const onClickBuy = () => {
+    const produto = allProducts.find(receita => receita.id === id)
     setSelectedProduto(produto)
     setIsModalOpen(true)
   }
@@ -45,11 +52,11 @@ const ProdutoPage = () => {
   return (
     <>
       <Produtos
-        nomeProduto={produto.nomeReceita}
-        descricaoProduto={produto.descricaoReceita}
-        precoProduto={produto.precoReceita}
+        nomeProduto={productName}
+        descricaoProduto={productDescription}
+        precoProduto={productPrice}
         onClickBuy={onClickBuy}
-        arrayImagens={produto.arrayImagens}
+        /* arrayImagens={produto?.arrayImagens} */
       />
       {isModalOpen && (
         <Modal produto={selectedProduto} closeModal={closeModal} />

@@ -13,7 +13,7 @@ const Produtos = ({
   onClickBuy,
   arrayImagens,
 }) => {
-  const [selectedImage, setSelectedImage] = useState(arrayImagens[0])
+  const [selectedImage, setSelectedImage] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [language, setLanguage] = useState('pt-br')
 
@@ -56,7 +56,7 @@ const Produtos = ({
     <div className='w-full h-screenHeader overflow-y-auto'>
       {/* Desktop */}
       <div className='hidden md:flex justify-between items-center px-60 pt-14 pb-16 w-full gap-20'>
-        <div className='flex justify-center items-center w-1/2 gap-5'>
+        {/* <div className='flex justify-center items-center w-1/2 gap-5'>
           <div className='flex flex-col gap-5'>
             {renderImages(arrayImagens, 'min-h-32')}
           </div>
@@ -73,7 +73,7 @@ const Produtos = ({
             </div>
             <Button label='&gt;' onClick={handleNextImage} />
           </div>
-        </div>
+        </div> */}
         <div className='flex flex-col gap-16 p-5 bg-white shadow-lg w-1/2 min-h-144 rounded-lg'>
           <BackButton />
           <div className='flex flex-col justify-center items-center gap-10 h-full'>
@@ -104,7 +104,7 @@ const Produtos = ({
         <div className='flex flex-col gap-5 bg-white shadow-lg min-h-144 rounded-lg p-5'>
           <BackButton />
           <div className='flex flex-col justify-center items-center gap-10 h-full'>
-            <div className='w-full h-128 flex justify-center items-center gap-10'>
+            {/*   <div className='w-full h-128 flex justify-center items-center gap-10'>
               <Button label='&lt;' onClick={handlePrevImage} />
               <div className='flex justify-center p-3 items-center object-scale-down'>
                 <Image
@@ -116,7 +116,7 @@ const Produtos = ({
                 />
               </div>
               <Button label='&gt;' onClick={handleNextImage} />
-            </div>
+            </div> */}
             <div className='flex flex-col gap-5 px-2'>
               <span className='text-4xl font-moreSugar text-center'>
                 {nomeProduto}
