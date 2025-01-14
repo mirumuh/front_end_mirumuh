@@ -2,6 +2,7 @@
 
 import Modal from '@/app/components/Modal'
 import Produtos from '@/app/components/Produtos'
+import getProducts from '@/services/get-products'
 import { mockDataReceitas } from '@/services/receitasData'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -11,11 +12,13 @@ const ProdutoPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProduto, setSelectedProduto] = useState(null)
 
-  /*   const fetchProduto = async () => {
+  const fetchProduto = async () => {
     try {
-      const response = await fetch('http://localhost:8080/products')
-      const data = await response.json()
-      console.log('Produtos:', data)
+      const response = await getProducts()
+        .then(response => console.log(response))
+        .catch(error => console.error(error))
+
+      console.log('Produtos:', response)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
     }
@@ -24,7 +27,7 @@ const ProdutoPage = () => {
   useEffect(() => {
     fetchProduto()
   }, [])
- */
+
   const produto = mockDataReceitas.find(
     receita => receita.idReceita === Number(id)
   )
