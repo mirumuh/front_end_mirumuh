@@ -1,8 +1,9 @@
 'use client'
 
+import Loading from '@/app/components/Loading'
 import Modal from '@/app/components/Modal'
 import Produtos from '@/app/components/Produtos'
-import getProductsWithPrice from '@/services/get-products'
+import getProductsWithPrice from '@/services/getProducts'
 import { mockDataReceitas } from '@/services/receitasData'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -15,13 +16,17 @@ const ProdutoPage = () => {
   const [productName, setProductName] = useState('')
   const [productDescription, setProductDescription] = useState('')
   const [productPrice, setProductPrice] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchProduto = async () => {
+    setIsLoading(true)
     try {
       const response = await getProductsWithPrice()
       setAllProducts(response)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -51,13 +56,17 @@ const ProdutoPage = () => {
 
   return (
     <>
-      <Produtos
-        nomeProduto={productName}
-        descricaoProduto={productDescription}
-        precoProduto={productPrice}
-        onClickBuy={onClickBuy}
-        /* arrayImagens={produto?.arrayImagens} */
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Produtos
+          nomeProduto={productName}
+          descricaoProduto={productDescription}
+          precoProduto={productPrice}
+          onClickBuy={onClickBuy}
+          /* arrayImagens={produto?.arrayImagens} */
+        />
+      )}
       {isModalOpen && (
         <Modal produto={selectedProduto} closeModal={closeModal} />
       )}

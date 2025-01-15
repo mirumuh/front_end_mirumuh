@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
+import Button from '../components/Button'
+import downloadReceita from '@/services/downloadReceita'
 
 const Sucesso = () => {
   return (
@@ -21,10 +23,11 @@ const Sucesso = () => {
           </div>
           <div className='flex justify-center items-center '>
             <p className='text-[16px] text-justify'>
-              Faça o download aqui ou verifique seu e-mail para confirmar o
-              recebimento do PDF.
+              Clique no botão de download ou verifique seu e-mail para
+              confirmar o recebimento do PDF.
             </p>
           </div>
+          <Button label='Download' variant={'brown'}></Button>
         </div>
       </div>
     </div>

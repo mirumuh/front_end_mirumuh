@@ -8,6 +8,21 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+        jump: 'jump 1s infinite',
+        'jump-delay': 'jump 1s infinite 0.2s',
+        shadow: 'shadow 1s infinite',
+      },
+      keyframes: {
+        jump: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        shadow: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '0.5' },
+          '50%': { transform: 'scale(0.8)', opacity: '0.2' },
+        },
+      },
       fontFamily: {
         moreSugar: ['MoreSugar', 'sans-serif'],
         moreSugarExtras: ['MoreSugarExtras', 'sans-serif'],

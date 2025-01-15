@@ -83,7 +83,7 @@ const Produtos = ({
               </span>
               <span className='text-justify'>{descricaoProduto}</span>
               <span className='font-bold text-xl font-moreSugarThin'>
-                R$ {precoProduto}
+                R$ {(precoProduto / 100).toFixed(2)}
               </span>
               {/* 
               <LanguageSwitcher

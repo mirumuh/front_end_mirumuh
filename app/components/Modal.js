@@ -2,25 +2,31 @@
 import React, { useState } from 'react'
 import LanguageSwitcher from './LanguageSwitcher'
 import Button from './Button'
+import checkoutPayment from '@/services/checkout'
 
 const Modal = ({ produto, closeModal }) => {
   const [language, setLanguage] = useState('pt-br')
   const [email, setEmail] = useState('')
   const [confirmEmail, setConfirmEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const checkout = async e => {
-    e.stopPropagation()
-    alert('Abre stripe!')
-    /* const response = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, produto })
-    })
-    if (response.ok) {
-      closeModal()
-    } */
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const response = await checkoutPayment(
+        email,
+        produto.prices[0].id,
+        1
+      )
+      if (response) {
+        window && window.open(response.url)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
