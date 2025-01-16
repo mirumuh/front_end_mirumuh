@@ -32,12 +32,7 @@ const Receitas = () => {
           <Loading />
         ) : (
           allProducts.map((receita, index) => (
-            <Receita
-              key={index}
-              idReceita={receita?.id}
-              nomeReceita={receita?.name}
-              descricaoReceita={receita?.description}
-            />
+            <Receita key={index} receita={receita} />
           ))
         )}
       </div>
