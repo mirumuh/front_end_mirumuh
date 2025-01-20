@@ -3,7 +3,7 @@ import React from 'react'
 
 const Loading = () => {
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center flex-col gap-5'>
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center flex-col gap-10'>
       <div className='flex flex-col items-center justify-center w-32 h-32 animate-jump'>
         <Image
           src={'/images/coelho.png'}
