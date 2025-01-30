@@ -14,8 +14,9 @@ const Receita = ({ receita }) => {
           height={100}
           loader={({ src }) => src}
           style={{
-            transform: 'scale(1.5)',
+            transform: 'scale(2)',
             objectFit: 'fill',
+            transformOrigin: 'center center',
           }}
         />
       </div>
