@@ -7,7 +7,7 @@ const Cancelado = () => {
       <div className='bg-white rounded-3xl shadow-lg flex gap-6 justify-center items-center py-5 px-6 md:px-8'>
         <div className='flex'>
           <Image
-            src={'/icons/logo_marcado.png'}
+            src={'/icons/linhaErro.svg'}
             alt={'Icone da Mirumuh'}
             width={300}
             height={300}

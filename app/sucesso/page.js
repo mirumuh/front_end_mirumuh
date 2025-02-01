@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import Button from '../components/Button'
-import downloadReceita from '@/services/downloadReceita'
+//import downloadReceita from '@/services/downloadReceita'
 
 const Sucesso = () => {
   return (
