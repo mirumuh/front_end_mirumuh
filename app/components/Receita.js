@@ -2,22 +2,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const Receita = ({ receita }) => {
-  console.log(receita)
-
   return (
     <div className='flex flex-col gap-3 bg-white rounded-3xl shadow-lg p-4 sm:flex-row sm:gap-5 sm:items-center sm:py-5'>
       <div className='flex items-center justify-center border border-blue rounded-2xl w-full p-1 sm:w-32 sm:h-32 overflow-hidden'>
         <Image
-          src={receita?.images[0]}
+          src={receita?.images[0] || '/icons/logo_marcado.png'}
           alt='Imagem da Receita'
           width={100}
           height={100}
-          loader={({ src }) => src}
-          style={{
-            transform: 'scale(2)',
-            objectFit: 'fill',
-            transformOrigin: 'center center',
-          }}
+          style={
+            receita?.images[0]
+              ? {
+                  transform: 'scale(2)',
+                  objectFit: 'fill',
+                  transformOrigin: 'center 70% 20px',
+                }
+              : {}
+          }
         />
       </div>
 
