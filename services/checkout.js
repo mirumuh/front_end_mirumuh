@@ -13,7 +13,7 @@ export default async function checkoutPayment(
     quantity: quantity,
     success_url: `http://localhost:3000/${lang}/sucesso?recipe_name=${encodeURIComponent(
       recipe_name
-    )}`,
+    )}&email=${email}`,
     cancel_url: `http://localhost:3000/${lang}/cancelado`,
   })
 

@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { useParams, useSearchParams } from 'next/navigation'
 import Button from '@/app/components/Button'
 import downloadReceita from '@/services/downloadReceita'
+import { useEffect } from 'react'
+import sendEmail from '@/services/sendEmail'
 
 // Traduções
 const messages = {
@@ -24,6 +26,7 @@ const Sucesso = () => {
   const { lang } = useParams()
   const searchParams = useSearchParams()
   const encodedRecipeName = searchParams.get('recipe_name')
+  const encodedEmail = searchParams.get('email')
 
   const content = messages[lang] || messages['pt-br']
 
@@ -41,7 +44,7 @@ const Sucesso = () => {
 
   const downloadPDF = async () => {
     try {
-      const blob = await downloadReceita({ id: recipeName })
+      const blob = await downloadReceita({ id: recipeNameWithoutAccents })
       const url = window.URL.createObjectURL(blob)
 
       const a = document.createElement('a')
@@ -55,6 +58,34 @@ const Sucesso = () => {
       console.error('Failed to download PDF:', error)
     }
   }
+
+  const removeAccents = str => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  }
+
+  const recipeNameWithoutAccents = removeAccents(recipeName)
+
+  useEffect(() => {
+    const sendEmailTo = async () => {
+      const emailSent = localStorage.getItem('emailSent')
+      if (!emailSent) {
+        const data = {
+          recipient: encodedEmail,
+          subject: `Receita do ${recipeName}`,
+          body: 'Obrigada por comprar na Mirumuh! Aqui está a sua receita.',
+          file_id: recipeNameWithoutAccents,
+        }
+        try {
+          await sendEmail(data)
+          localStorage.setItem('emailSent', 'true')
+        } catch (error) {
+          console.error('Failed to send email:', error)
+        }
+      }
+    }
+    sendEmailTo()
+  }, [encodedEmail, recipeName, recipeNameWithoutAccents])
+
   return (
     <div className='w-full h-screenHeader overflow-y-auto py-10 px-5 lg:py-8 lg:px-96 flex items-center justify-center'>
       <div className='bg-white rounded-3xl shadow-lg flex gap-6 justify-center items-center py-5 px-6 md:px-8'>
