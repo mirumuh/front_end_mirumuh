@@ -27,10 +27,7 @@ const Header = () => {
         className={`relative bg-light-pink flex flex-col justify-center w-full pt-7 px-4 gap-8 shadow-md z-20 `}
       >
         <div className='flex justify-between items-center w-full md:justify-center'>
-          <Link
-            href={'/sobre'}
-            className='flex justify-center items-center'
-          >
+          <Link href={'/'} className='flex justify-center items-center'>
             <Image
               src='/icons/logoFullMarcado.png'
               alt='Ateliê da Mirumuh'

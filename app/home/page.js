@@ -5,6 +5,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import { Pagination, Autoplay } from 'swiper/modules'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 const HomePage = () => {
   const [slides] = useState([
     {
@@ -46,10 +47,12 @@ const HomePage = () => {
                 key={index}
                 className='p-4 flex flex-col items-center'
               >
-                <img
+                <Image
                   src={slide.image}
                   alt={slide.title}
-                  className='h-32 w-32 object-cover flex justify-center items-center'
+                  width={128}
+                  height={128}
+                  className='object-cover flex justify-center items-center'
                 />
                 <h2 className='text-xl font-semibold text-brown-700 text-center'>
                   {slide.title}
@@ -64,28 +67,34 @@ const HomePage = () => {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full'>
           <button className='bg-blue p-4 rounded-lg flex flex-col items-center shadow w-full'>
-            <img
+            <Image
               src='/icons/chat.svg'
               alt='Encomendar produto'
-              className='h-12 w-12 mb-2'
-            ></img>
+              width={48}
+              height={48}
+              className='mb-2'
+            />
             <span className='text-brown'>Encomende seu produto</span>
           </button>
           <button className='bg-blue p-4 rounded-lg flex flex-col items-center shadow w-full'>
-            <img
+            <Image
               src='/icons/descubra.svg'
               alt='Descubra receitas'
-              className='h-12 w-12 mb-2'
+              width={48}
+              height={48}
+              className='mb-2'
               onClick={() => router.push('/receitas')}
-            ></img>
+            />
             <span className='text-brown'>Descubra as receitas</span>
           </button>
           <button className='bg-blue p-4 rounded-lg flex flex-col items-center shadow w-full'>
-            <img
+            <Image
               src='/icons/ajuda.svg'
               alt='Ajuda'
-              className='h-12 w-12 mb-2'
-            ></img>
+              width={48}
+              height={48}
+              className='mb-2'
+            />
             <span className='text-brown'>Ajuda</span>
           </button>
         </div>

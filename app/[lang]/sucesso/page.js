@@ -67,7 +67,7 @@ const Sucesso = () => {
 
   useEffect(() => {
     const sendEmailTo = async () => {
-      const emailSent = localStorage.getItem('emailSent')
+      const emailSent = sessionStorage.getItem('emailSent')
       if (!emailSent) {
         const data = {
           recipient: encodedEmail,
@@ -77,7 +77,7 @@ const Sucesso = () => {
         }
         try {
           await sendEmail(data)
-          localStorage.setItem('emailSent', 'true')
+          sessionStorage.setItem('emailSent', 'true')
         } catch (error) {
           console.error('Failed to send email:', error)
         }

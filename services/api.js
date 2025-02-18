@@ -9,3 +9,23 @@ export const api = axios.create({
   },
   baseURL: 'http://localhost:8080/',
 })
+
+api.interceptors.request.use(
+  config => {
+    const token = sessionStorage.getItem('token') // Pegue o token do sessionStorage ou use um contexto
+
+    // Verifica se o endpoint NÃO é login ou create-user antes de adicionar o token
+    if (
+      !config.url.includes('/login') &&
+      !config.url.includes('/create-user') &&
+      token
+    ) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)

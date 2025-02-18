@@ -2,22 +2,52 @@
 import Button from '../components/Button'
 import { useState } from 'react'
 import Image from 'next/image'
+import login, { register } from '@/services/login'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('') // Novo estado para "confirmar senha"
   const [name, setName] = useState('') // Novo estado para "nome"
+  const [birthdate, setBirthdate] = useState('') // Novo estado para "data de nascimento"
   const [isLogin, setIsLogin] = useState(true) // Estado para alternar entre login e cadastro
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = e => {
+  const handleCadastrar = async e => {
     e.preventDefault()
     if (password !== confirmPassword) {
       alert('As senhas não coincidem!')
       return
     }
-    // Handle login or register logic here
-    console.log('Formulário enviado', { name, email, password })
+
+    setIsLoading(true)
+    try {
+      const response = await register(email, password)
+      console.log(response)
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleLogin = async e => {
+    e.preventDefault()
+
+    setIsLoading(true)
+
+    try {
+      const response = await login(email, password)
+
+      if (response) {
+        sessionStorage.setItem('token', response.token)
+        window.location.href = '/home'
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -55,7 +85,7 @@ const LoginPage = () => {
           </p>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleLogin}
           className='mt-6 w-full max-w-sm flex gap-2 flex-col'
         >
           <input
@@ -73,7 +103,7 @@ const LoginPage = () => {
             className='w-full p-3 mb-3 border rounded-lg'
           />
           <div className='flex justify-center items-center'>
-            <Button label='Entrar' variant={'brown'}></Button>
+            <Button label='Entrar' variant={'brown'} type={'submit'} />
           </div>
         </form>
       </div>
@@ -111,7 +141,7 @@ const LoginPage = () => {
           </p>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleCadastrar}
           className='mt-6 w-full max-w-sm flex gap-2 flex-col'
         >
           <input
@@ -129,6 +159,13 @@ const LoginPage = () => {
             className='w-full p-3 mb-3 border rounded-lg'
           />
           <input
+            type='date'
+            placeholder='Data de Nascimento'
+            value={birthdate}
+            onChange={e => setBirthdate(e.target.value)}
+            className='w-full p-3 mb-3 border rounded-lg'
+          />
+          <input
             type='password'
             placeholder='Senha'
             value={password}
@@ -143,7 +180,7 @@ const LoginPage = () => {
             className='w-full p-3 mb-3 border rounded-lg'
           />
           <div className='flex justify-center items-center'>
-            <Button label='Cadastrar' variant={'brown'}></Button>
+            <Button label='Cadastrar' variant={'brown'} type={'submit'} />
           </div>
         </form>
       </div>
