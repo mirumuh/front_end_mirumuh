@@ -1,6 +1,6 @@
-import Header from './components/Header'
 import './globals.css'
 import { Poppins } from 'next/font/google'
+import LayoutWrapper from './components/LayoutWrapper'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -18,8 +18,7 @@ export default function RootLayout({ children }) {
         <link rel='icon' href='/icons/iconMirumuh_topRosa_marrom.png' />
       </head>
       <body className={`antialiased background overflow-hidden`}>
-        <Header />
-        {children}
+        <LayoutWrapper>{children}</LayoutWrapper> {/* Agora a lógica do Header está no Client Component */}
       </body>
     </html>
   )

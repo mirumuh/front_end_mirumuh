@@ -1,8 +1,10 @@
 const Button = ({ variant, label, onClick, type }) => {
   const color =
-    variant === 'brown'
-      ? 'bg-foreground hover:bg-light-darker-brown text-white'
-      : 'bg-blue hover:bg-light-darker-blue text-white'
+  variant === 'brown'
+    ? 'bg-foreground hover:bg-light-darker-brown text-white'
+    : variant === 'pink'
+    ? 'bg-light-pink foreground hover:bg-light-darker-pink text-brown'
+    : 'bg-blue hover:bg-light-darker-blue text-white'; 
   return (
     <button
       onClick={onClick}

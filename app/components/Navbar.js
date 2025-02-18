@@ -8,6 +8,7 @@ const Navbar = ({ variant }) => {
     { label: 'Artes', path: '/', disabled: true },
     { label: 'Sobre', path: '/sobre', disabled: false },
     { label: 'Login', path: '/', disabled: true },
+    { label: 'Conta', path: '/', disabled: true },
   ]
   return (
     <nav className='flex gap-20 font-semibold uppercase justify-center'>
