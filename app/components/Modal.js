@@ -11,6 +11,19 @@ const Modal = ({ produto, closeModal }) => {
   const [confirmEmail, setConfirmEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  const encode = text => {
+    const encoder = new TextEncoder()
+    const encodedData = encoder.encode(text)
+    return btoa(String.fromCharCode(...encodedData))
+  }
+
+  const pdfName = name => {
+    const formattedName = name.replace(/ /g, '_')
+    return language === 'pt-br'
+      ? encode(`ptbr_${formattedName}.pdf`)
+      : encode(`eng_${formattedName}.pdf`)
+  }
+
   const checkout = async e => {
     e.preventDefault()
     setIsLoading(true)
@@ -18,10 +31,12 @@ const Modal = ({ produto, closeModal }) => {
       const response = await checkoutPayment(
         email,
         produto.prices[0].id,
-        1
+        1,
+        language,
+        pdfName(produto.name)
       )
       if (response) {
-        window && window.open(response.url)
+        window && (window.location.href = response.url)
       }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
