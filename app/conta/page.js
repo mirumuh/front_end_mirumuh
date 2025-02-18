@@ -8,6 +8,11 @@ const ContaPage = () => {
     { id: 1113, data: '08/02/2024', detalhes: 'TESTE' },
   ]
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('token')
+    window.location.href = '/login'
+  }
+
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
       <div className='flex flex-col gap-5 px-5 py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14'>
@@ -24,7 +29,11 @@ const ContaPage = () => {
               <p className='text-brown pb-4'>email@exemplo.com</p>
               <div className='flex w-full justify-between'>
                 <Button label='Alterar Senha' variant={'pink'}></Button>
-                <Button label='Sair da Conta' variant={'brown'}></Button>
+                <Button
+                  label='Sair da Conta'
+                  variant={'brown'}
+                  onClick={handleLogout}
+                ></Button>
               </div>
             </div>
           </div>
