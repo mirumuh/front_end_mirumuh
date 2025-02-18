@@ -22,12 +22,23 @@ const Navbar = ({ isOpen, closeMenu }) => {
   const navItems = [
     { label: 'Home', path: '/', disabled: false },
     { label: 'Receitas', path: '/receitas', disabled: false },
-    { label: 'Amigurumis', path: '/', disabled: true },
-    { label: 'Artes', path: '/', disabled: true },
+    { label: 'Amigurumis', path: '/amigurimis', disabled: true },
+    { label: 'Artes', path: '/artes', disabled: true },
     { label: 'Sobre', path: '/sobre', disabled: false },
     { label: 'Login', path: '/login', disabled: logado },
     { label: 'Conta', path: '/conta', disabled: !logado },
   ]
+
+  const handleLinkClick = path => {
+    if (
+      !logado &&
+      (path === '/receitas' || path === '/amigurumis' || path === '/artes')
+    ) {
+      window.location.href = '/login'
+    } else {
+      closeMenu()
+    }
+  }
 
   return (
     <nav className='relative z-20'>
@@ -44,7 +55,9 @@ const Navbar = ({ isOpen, closeMenu }) => {
                 className={`p-2 hover:bg-bege rounded-2xl text-center ${
                   item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
-                onClick={closeMenu}
+                onClick={() => {
+                  handleLinkClick(item.path)
+                }}
               >
                 {item.label}
               </Link>
