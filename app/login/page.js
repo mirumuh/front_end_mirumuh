@@ -33,7 +33,10 @@ const LoginPage = () => {
           className='absolute flex top-6 right-6 cursor-pointer'
         >
           <p className='text-white'>
-            Ainda não tem uma conta? Cadastre-se!
+            Ainda não tem uma conta?{' '}
+            <span className='underline font-semibold underline-offset-2'>
+              Cadastre-se!
+            </span>
           </p>
         </div>
         <div className='text-center'>
@@ -51,7 +54,10 @@ const LoginPage = () => {
             Insira seus dados para acessar sua conta
           </p>
         </div>
-        <form onSubmit={handleSubmit} className='mt-6 w-full max-w-sm'>
+        <form
+          onSubmit={handleSubmit}
+          className='mt-6 w-full max-w-sm flex gap-2 flex-col'
+        >
           <input
             type='email'
             placeholder='Email'
@@ -83,7 +89,10 @@ const LoginPage = () => {
           className='absolute flex top-6 left-6 cursor-pointer'
         >
           <p className='text-black'>
-            Já tem uma conta? Entre aqui!
+            Já tem uma conta?{' '}
+            <span className='underline font-semibold underline-offset-2'>
+              Entre aqui!
+            </span>
           </p>
         </div>
         <div className='text-center'>
@@ -101,7 +110,10 @@ const LoginPage = () => {
             Insira seus dados para criar uma nova conta
           </p>
         </div>
-        <form onSubmit={handleSubmit} className='mt-6 w-full max-w-sm'>
+        <form
+          onSubmit={handleSubmit}
+          className='mt-6 w-full max-w-sm flex gap-2 flex-col'
+        >
           <input
             type='text'
             placeholder='Nome'

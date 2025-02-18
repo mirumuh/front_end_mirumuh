@@ -15,10 +15,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en' className={poppins.className}>
       <head>
-        <link rel='icon' href='/icons/iconMirumuh_topRosa_marrom.png' />
+        <link rel='icon' href='/icons/logo_marcado.png' />
       </head>
       <body className={`antialiased background overflow-hidden`}>
-        <LayoutWrapper>{children}</LayoutWrapper> {/* Agora a lógica do Header está no Client Component */}
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   )
