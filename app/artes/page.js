@@ -2,14 +2,10 @@
 import Loading from '@/app/components/Loading'
 import Modal from '@/app/components/Modal'
 import Produtos from '@/app/components/Produtos'
-import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 const ArtesPage = () => {
-  const searchParams = useSearchParams()
-  const receitaParam = searchParams.get('receita')
-  const receita = receitaParam ? JSON.parse(receitaParam) : null
-
+  const receita = []
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProduto, setSelectedProduto] = useState(null)
 
@@ -28,13 +24,13 @@ const ArtesPage = () => {
       {!receita ? (
         <Loading />
       ) : (
-        <Produtos
+        /*  <Produtos
           nomeProduto={receita?.name}
           descricaoProduto={receita?.description}
           precoProduto={receita?.prices[0].amount}
           onClickBuy={onClickBuy}
           arrayImagens={receita?.images}
-        />
+        /> */ <></>
       )}
       {isModalOpen && (
         <Modal produto={selectedProduto} closeModal={closeModal} />
