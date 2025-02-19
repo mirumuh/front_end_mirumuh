@@ -6,6 +6,7 @@ import 'swiper/css/pagination'
 import { Pagination, Autoplay } from 'swiper/modules'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import ModalRedirecionamento from '../components/ModalRedirecionamento'
 const HomePage = () => {
   const [slides] = useState([
     {
@@ -28,6 +29,8 @@ const HomePage = () => {
     },
     // Adicione mais slides conforme necessário
   ])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
@@ -76,7 +79,10 @@ const HomePage = () => {
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full'>
             <button className='bg-blue px-4 py-8 rounded-lg flex flex-col items-center shadow w-full gap-2'>
-              <div className='flex justify-center items-center w-16 h-16'>
+              <div
+                className='flex justify-center items-center w-16 h-16'
+                onClick={() => setIsModalOpen(true)}
+              >
                 <Image
                   src='/icons/chat.svg'
                   alt='Encomendar produto'
@@ -86,6 +92,10 @@ const HomePage = () => {
               </div>
               <span className='text-brown'>Encomende seu produto</span>
             </button>
+            <ModalRedirecionamento
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+            />
             <button className='bg-blue px-4 py-8 rounded-lg flex flex-col items-center shadow w-full gap-2'>
               <div className='flex justify-center items-center w-16 h-16'>
                 <Image
