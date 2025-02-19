@@ -25,18 +25,17 @@ const HomePage = () => {
       description: 'TESTE',
       price: 'R$ ,00',
     },
-    // Adicione mais slides conforme necessário
   ])
 
   return (
-    <div className='w-full h-screenHeader overflow-y-auto py-10 px-5 lg:py-8 lg:px-96 flex items-center justify-center'>
+    <div className='w-full h-screenHeader overflow-y-auto pt-40 py-10 px-5 lg:py-8 lg:px-96 flex items-center justify-center'>
       <div className='bg-white rounded-3xl shadow-lg p-6 w-full max-w-5xl flex flex-col items-center'>
         <div className='w-full bg-blue p-4 rounded-lg shadow-lg mb-4'>
           <Swiper
             pagination={{ clickable: true }}
             autoplay={{
-              delay: 2000, // Define o intervalo de tempo (2 segundos)
-              disableOnInteraction: false, // Continua a reprodução mesmo após a interação do usuário
+              delay: 2000, // (2 segundos)
+              disableOnInteraction: false,
             }}
             modules={[Pagination, Autoplay]}
             className='rounded-lg overflow-hidden'

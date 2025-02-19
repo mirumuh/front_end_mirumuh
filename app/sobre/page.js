@@ -20,7 +20,7 @@ const Sobre = () => {
       alt: 'ícone de email',
     },
     { href: '', src: '/icons/site.svg', alt: 'ícone de site' },
-    { href: '', src: '/icons/canva.svg', alt: 'ícone de canvas' },
+    { href: '', src: '/icons/canva.svg', alt: 'ícone de canvas de pintura' },
   ]
 
   return (
@@ -43,18 +43,20 @@ const Sobre = () => {
           </p>
         </div>
         <div className='flex justify-center gap-3 items-center '>
-          {icons.map((icon, index) => (
-            <Link href={icon.href} key={index} target='_blank'>
-              <div className='flex'>
-                <Image
-                  src={icon.src}
-                  alt={icon.alt}
-                  width={50}
-                  height={50}
-                ></Image>
-              </div>
-            </Link>
-          ))}
+          {icons
+            .filter(icon => icon.href) // Remove itens com href vazio
+            .map((icon, index) => (
+              <Link href={icon.href} key={index} target='_blank'>
+                <div className='flex'>
+                  <Image
+                    src={icon.src}
+                    alt={icon.alt}
+                    width={50}
+                    height={50}
+                  />
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
     </div>
