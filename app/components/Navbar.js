@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React, { Fragment, useEffect, useState } from 'react'
 
 const Navbar = ({ isOpen, closeMenu }) => {
   const [logado, setLogado] = useState(false)
   const token = sessionStorage.getItem('token')
+  const router = usePathname()
 
   const verifyLogin = token => {
     if (token !== null) {
@@ -22,8 +24,8 @@ const Navbar = ({ isOpen, closeMenu }) => {
   const navItems = [
     { label: 'Home', path: '/', disabled: false },
     { label: 'Receitas', path: '/receitas', disabled: false },
-    { label: 'Amigurumis', path: '/amigurimis', disabled: true },
-    { label: 'Artes', path: '/artes', disabled: true },
+    { label: 'Amigurumis', path: '/amigurumis', disabled: false },
+    { label: 'Pinturas', path: '/pinturas', disabled: false },
     { label: 'Sobre', path: '/sobre', disabled: false },
     { label: 'Login', path: '/login', disabled: logado },
     { label: 'Conta', path: '/conta', disabled: !logado },
@@ -54,7 +56,7 @@ const Navbar = ({ isOpen, closeMenu }) => {
                 href={item.path}
                 className={`p-2 hover:bg-bege rounded-2xl text-center ${
                   item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-                }`}
+                } ${router === item.path ? 'bg-bege' : ''}`}
                 onClick={() => {
                   handleLinkClick(item.path)
                 }}

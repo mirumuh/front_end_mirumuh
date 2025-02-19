@@ -27,7 +27,7 @@ const ContaPage = () => {
               <p className='font-semibold'>Informações de Contato</p>
               <p className='py-2'>Nome do Usuário</p>
               <p className='text-brown pb-4'>email@exemplo.com</p>
-              <div className='flex w-full justify-between'>
+              <div className='flex w-full justify-between md:flex-row flex-col gap-4'>
                 <Button label='Alterar Senha' variant={'pink'}></Button>
                 <Button
                   label='Sair da Conta'
@@ -50,7 +50,7 @@ const ContaPage = () => {
                   key={pedido.id}
                   className='border border-blue rounded-2xl p-4 mb-3'
                 >
-                  <div className='flex justify-between items-center'>
+                  <div className='flex justify-between items-center md:flex-row flex-col gap-4'>
                     <p>
                       <span className='font-semibold'>
                         Pedido #{pedido.id}
