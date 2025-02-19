@@ -7,5 +7,5 @@ export const api = axios.create({
     Authorization: `Bearer ${configValue}`,
     'Content-Type': 'application/json',
   },
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://159.89.52.201:8080/',
 })
