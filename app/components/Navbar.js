@@ -18,7 +18,7 @@ const Navbar = ({ isOpen, closeMenu }) => {
       <div
         className={`${
           isOpen ? 'flex' : 'hidden'
-        } flex-col md:flex md:flex-row gap-4 md:gap-20 font-semibold uppercase justify-center py-6`}
+        } flex-col md:flex md:flex-row gap-4 md:gap-20 font-semibold uppercase justify-center md:py-3 py-6`}
       >
         {navItems.map((item, index) => (
           <Fragment key={index}>
