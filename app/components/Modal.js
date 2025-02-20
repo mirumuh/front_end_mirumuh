@@ -19,10 +19,10 @@ const Modal = ({ produto, closeModal }) => {
 
   const pdfName = name => {
     const formattedName = name.replace(/ /g, '_')
-    return language === 'pt-br'
-      ? encode(`ptbr_${formattedName}.pdf`)
-      : encode(`eng_${formattedName}.pdf`)
+    return encode(`${formattedName}.pdf`)
   }
+
+  console.log(pdfName(produto.name))
 
   const checkout = async e => {
     e.preventDefault()

@@ -11,10 +11,12 @@ export default async function checkoutPayment(
     customer_email: email,
     price_id: price_id,
     quantity: quantity,
-    success_url: `http://localhost:3000/${lang}/sucesso?recipe_name=${encodeURIComponent(
+    success_url: `${
+      window.location.origin
+    }/${lang}/sucesso?recipe_name=${encodeURIComponent(
       recipe_name
     )}&email=${email}`,
-    cancel_url: `http://localhost:3000/${lang}/cancelado`,
+    cancel_url: `${window.location.origin}/${lang}/cancelado`,
   })
 
   return response || []

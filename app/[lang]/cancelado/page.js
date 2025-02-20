@@ -9,7 +9,7 @@ const messages = {
     description:
       'Tente novamente ou entre em contato por email para nossa equipe ajudá-lo a concluir sua compra.',
   },
-  eng: {
+  us: {
     title: 'Ops! Something went wrong with your payment',
     description:
       'Try again or contact us by email for our team to help you complete your purchase.',
@@ -18,7 +18,7 @@ const messages = {
 
 const Cancelado = () => {
   const { lang } = useParams()
-  const content = messages[lang] || messages['pt-br'] // Se não for eng ou pt, padrão para pt
+  const content = messages[lang] || messages['pt-br'] // Se não for us ou pt, padrão para pt
 
   return (
     <div className='w-full h-screenHeader overflow-y-auto py-10 px-5 lg:py-8 lg:px-96 flex items-center justify-center'>

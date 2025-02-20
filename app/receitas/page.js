@@ -13,7 +13,9 @@ const Receitas = () => {
     try {
       const response = await getProductsWithPrice()
 
-      setAllProducts(response)
+      const activeProducts = response.filter(product => product.active)
+
+      setAllProducts(activeProducts)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
     } finally {
