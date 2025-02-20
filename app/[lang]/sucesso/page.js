@@ -14,7 +14,7 @@ const messages = {
       'Clique no botão de download ou verifique seu e-mail para confirmar o recebimento do PDF.',
     buttonLabel: 'Download',
   },
-  eng: {
+  us: {
     title: 'Thank you for shopping at Mirumuh!',
     description:
       'Click the download button or check your email to confirm receipt of the PDF.',
@@ -41,6 +41,12 @@ const Sucesso = () => {
   }
 
   const recipeName = decode(encodedRecipeName)
+
+  const cleanRecipeName = name => {
+    return name.replace(/_/g, ' ').replace('.pdf', '')
+  }
+
+  const cleanedRecipeName = cleanRecipeName(recipeName)
 
   const downloadPDF = async () => {
     try {
@@ -71,7 +77,7 @@ const Sucesso = () => {
       if (!emailSent) {
         const data = {
           recipient: encodedEmail,
-          subject: `Receita do ${recipeName}`,
+          subject: `Receita ${cleanedRecipeName}`,
           body: 'Obrigada por comprar na Mirumuh! Aqui está a sua receita.',
           file_id: recipeNameWithoutAccents,
         }

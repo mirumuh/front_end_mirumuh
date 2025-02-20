@@ -10,7 +10,7 @@ const LanguageSwitcher = ({ setLanguage, language }) => {
       {/* Dropdown para selecionar o idioma */}
       <div className='mb-4 flex flex-col gap-5'>
         <label htmlFor='language' className='font-semibold'>
-          Escolha o idioma do PDF / Choose a language for the PDF:
+          Idioma / Language
         </label>
         <select
           id='language'
@@ -19,7 +19,7 @@ const LanguageSwitcher = ({ setLanguage, language }) => {
           className='border rounded p-2'
         >
           <option value='pt-br'>Português</option>
-          <option value='eng'>English</option>
+          <option value='us'>English</option>
         </select>
       </div>
     </div>
