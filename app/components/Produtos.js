@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Button from './Button'
 import BackButton from './BackButton'
-import LanguageSwitcher from './LanguageSwitcher'
+import Loading from './Loading'
 
 const Produtos = ({
   nomeProduto,
@@ -13,10 +13,12 @@ const Produtos = ({
   onClickBuy,
   arrayImagens,
 }) => {
-  const [selectedImage, setSelectedImage] = useState()
-  const [currentIndex, setCurrentIndex] = useState(0)
+  /*  const [selectedImage, setSelectedImage] = useState()
+  const [currentIndex, setCurrentIndex] = useState(0) */
 
-  const renderImages = (images, size) => {
+  const [isLoading, setIsLoading] = useState(true)
+
+  /*  const renderImages = (images, size) => {
     return images.map((src, index) => (
       <div
         key={index}
@@ -50,8 +52,11 @@ const Produtos = ({
     const newIndex = (currentIndex + 1) % arrayImagens.length
     setSelectedImage(arrayImagens[newIndex])
     setCurrentIndex(newIndex)
-  }
+  } */
 
+  const handleImageLoad = () => {
+    setIsLoading(false)
+  }
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
       {/* Desktop */}
@@ -63,13 +68,20 @@ const Produtos = ({
           <div className='bg-white w-full h-128 rounded-lg shadow-lg flex justify-center items-center gap-2'>
             {/*   <Button label='&lt;' onClick={handlePrevImage} /> */}
             <div className='flex justify-center p-3 items-center object-scale-down'>
+              {isLoading && (
+                <div className='absolute inset-0 flex justify-center items-center'>
+                  <Loading />
+                </div>
+              )}
               <Image
                 src={arrayImagens[0]}
                 alt='Imagem da Receita'
                 width={300}
                 height={300}
-                className='object-fill rounded-lg'
-                loader={({ src }) => src}
+                className={`object-fill rounded-lg transition-opacity duration-500 ${
+                  isLoading ? 'opacity-0' : 'opacity-100'
+                }`}
+                onLoadingComplete={handleImageLoad}
               />
             </div>
             {/*  <Button label='&gt;' onClick={handleNextImage} /> */}

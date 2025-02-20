@@ -9,7 +9,9 @@ export const api = axios.create({
     Authorization: `Bearer ${configValue}`,
     'Content-Type': 'application/json',
   },
-  baseURL: baseUrl,
+  baseURL: window.location.origin.includes('localhost')
+    ? testeUrl
+    : baseUrl,
 })
 
 api.interceptors.request.use(

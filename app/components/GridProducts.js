@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import Button from './Button'
+import Link from 'next/link'
 
-const GridProducts = ({ product }) => {
+const GridProducts = ({ product, buttonLabel }) => {
   return (
     <div className='flex flex-col gap-4 bg-white rounded-3xl shadow-lg p-10 items-center'>
       <div className='flex items-center justify-center border rounded-2xl w-full p-1 sm:h-56 overflow-hidden'>
@@ -31,14 +31,15 @@ const GridProducts = ({ product }) => {
         </p>
       </div>
 
-      <Button
-        label='Encomendar'
-        variant={'brown'}
-        onClick={
-          console.log('oi')
-          // onClick={onClickBuy};
-        }
-      />
+      <Link
+        href={{
+          pathname: `/produtos/${product?.id}`,
+          query: { produto: JSON.stringify(product) },
+        }}
+        className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl shadow w-min whitespace-nowrap'
+      >
+        {buttonLabel}
+      </Link>
     </div>
   )
 }

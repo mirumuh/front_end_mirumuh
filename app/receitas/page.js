@@ -13,9 +13,14 @@ const Receitas = () => {
     try {
       const response = await getProductsWithPrice()
 
-      const activeProducts = response.filter(product => product.active)
+      const filteredProducts = response.filter(
+        product =>
+          product.metadata &&
+          product.metadata.tipo === 'receita' &&
+          product.active
+      )
 
-      setAllProducts(activeProducts)
+      setAllProducts(filteredProducts)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
     } finally {
@@ -32,6 +37,14 @@ const Receitas = () => {
       <div className='flex flex-col gap-5 px-5 py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14'>
         {isLoading ? (
           <Loading />
+        ) : allProducts.length === 0 ? (
+          <div className=' flex flex-col gap-6 justify-center items-center  w-full'>
+            <div className='flex flex-row justify-center items-center w-fit bg-white rounded-3xl shadow-lg py-5 px-6 md:px-8'>
+              <h2 className='text-[16px] font-semibold'>
+                Não há receitas disponíveis
+              </h2>
+            </div>
+          </div>
         ) : (
           allProducts.map((receita, index) => (
             <Receita key={index} receita={receita} />

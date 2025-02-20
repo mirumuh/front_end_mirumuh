@@ -42,7 +42,7 @@ const Receita = ({ receita }) => {
       <Link
         href={{
           pathname: `/produtos/${receita?.id}`,
-          query: { receita: JSON.stringify(receita) },
+          query: { produto: JSON.stringify(receita) },
         }}
         className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl shadow w-min whitespace-nowrap'
       >
