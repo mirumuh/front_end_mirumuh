@@ -9,5 +9,5 @@ export const api = axios.create({
     Authorization: `Bearer ${configValue}`,
     'Content-Type': 'application/json',
   },
-  baseURL: testeUrl,
+  baseURL: baseUrl,
 })
