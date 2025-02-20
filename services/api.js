@@ -7,5 +7,5 @@ export const api = axios.create({
     Authorization: `Bearer ${configValue}`,
     'Content-Type': 'application/json',
   },
-  baseURL: 'https://159.89.52.201/',
+  baseURL: 'https://api.mirumuh.com.br',
 })
