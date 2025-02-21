@@ -40,7 +40,7 @@ const LoginPage = () => {
 
     setIsLoading(true)
     try {
-      // Não estamos mais verificando se o usuário já existe
+      //verificacao de usuario aqui algum dia
       const response = await register({ email, password, name, birthdate })
       if (response) {
         setSuccessMessage('Usuário cadastrado com sucesso!')
