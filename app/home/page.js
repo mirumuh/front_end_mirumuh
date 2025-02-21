@@ -27,7 +27,6 @@ const HomePage = () => {
       description: 'TESTE',
       price: 'R$ ,00',
     },
-    // Adicione mais slides conforme necessário
   ])
 
   const [isModalOpen, setIsModalOpen] = useState(false)

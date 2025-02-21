@@ -50,11 +50,7 @@ const LoginPage = () => {
         window.location.href = '/home'
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert('Usuário não encontrado!')
-      } else if (error.response.status === 401) {
-        alert('Senha inválida!')
-      }
+      alert('Verifique suas credenciais e tente novamente!')
     } finally {
       setTimeout(() => {
         setIsLoading(false)

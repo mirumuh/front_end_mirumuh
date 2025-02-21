@@ -24,9 +24,9 @@ const Header = () => {
         ></div>
       )}
       <header
-        className={`relative bg-light-pink flex flex-col justify-center w-full pt-7 px-4 gap-8 shadow-md z-20 `}
+        className={`relative bg-light-pink flex flex-col justify-center w-full pt-7 px-4 gap-8 md:gap-4 shadow-md z-20 `}
       >
-        <div className='flex justify-between items-center w-full md:justify-center'>
+        <div className='flex justify-between gap-3 items-center w-full md:justify-center'>
           <Link href={'/'} className='flex justify-center items-center'>
             <Image
               src='/icons/logoFullMarcado.png'
@@ -36,7 +36,8 @@ const Header = () => {
               height={200}
             />
           </Link>
-          <div className='md:hidden flex justify-center p-4'>
+
+          <div className='md:hidden flex justify-center '>
             <button onClick={toggleMenu} className='text-2xl'>
               {isMenuOpen ? (
                 <Image

@@ -8,14 +8,14 @@ import { useState } from 'react'
 
 const ProdutoPage = () => {
   const searchParams = useSearchParams()
-  const receitaParam = searchParams.get('receita')
-  const receita = receitaParam ? JSON.parse(receitaParam) : null
+  const receitaParam = searchParams.get('produto')
+  const produto = receitaParam ? JSON.parse(receitaParam) : null
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProduto, setSelectedProduto] = useState(null)
 
   const onClickBuy = () => {
-    setSelectedProduto(receita)
+    setSelectedProduto(produto)
     setIsModalOpen(true)
   }
 
@@ -26,15 +26,15 @@ const ProdutoPage = () => {
 
   return (
     <>
-      {!receita ? (
+      {!produto ? (
         <Loading />
       ) : (
         <Produtos
-          nomeProduto={receita?.name}
-          descricaoProduto={receita?.description}
-          precoProduto={receita?.prices[0].amount}
+          nomeProduto={produto?.name}
+          descricaoProduto={produto?.description}
+          precoProduto={produto?.prices[0].amount}
           onClickBuy={onClickBuy}
-          arrayImagens={receita?.images}
+          arrayImagens={produto?.images}
         />
       )}
       {isModalOpen && (
