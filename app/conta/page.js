@@ -1,7 +1,13 @@
 'use client'
 import Button from '../components/Button'
+import getUserProfile from '@/services/userInfo'
+import { useEffect, useState } from 'react'
 
 const ContaPage = () => {
+
+  const [user, setUser] = useState({})
+  const [error, setError] = useState('')
+
   const pedidos = [
     { id: 1111, data: '06/02/2024', detalhes: 'teste' },
     { id: 1112, data: '07/02/2024', detalhes: 'testindo' },
@@ -11,6 +17,25 @@ const ContaPage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('token')
     window.location.href = '/login'
+  }
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const data = await getUserProfile()
+        setUser(data)
+      } catch (error) {
+        setError('Não foi possível carregar os dados do usuário!')
+      }
+    }
+    getUserData()
+  }, [])
+
+  if (error) {
+    return <div className='flex flex-col justify-center items-center p-24'>
+      <div className='bg-white rounded-3xl shadow-lg w-80 p-6'>
+        <p className='text-center'>{error}</p>
+        </div></div>
   }
 
   return (
@@ -25,8 +50,8 @@ const ContaPage = () => {
             </div>
             <div className='p-6'>
               <p className='font-semibold'>Informações de Contato</p>
-              <p className='py-2'>Nome do Usuário</p>
-              <p className='text-brown pb-4'>email@exemplo.com</p>
+              <p className='py-2'>{user?.name}</p>
+              <p className='text-brown pb-4'>{user?.email}</p>
               <div className='flex w-full justify-between md:flex-row flex-col gap-4'>
                 <Button label='Alterar Senha' variant={'pink'}></Button>
                 <Button
