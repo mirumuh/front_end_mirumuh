@@ -8,7 +8,7 @@ const ContaPage = () => {
   const [user, setUser] = useState({})
   const [error, setError] = useState('')
   const [selectedTab, setSelectedTab] = useState('TODOS')
-  const [openModal, setOpenModal] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
 
   const handleModal = () => {
     setOpenModal(!openModal)

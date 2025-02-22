@@ -52,7 +52,7 @@ const MultiImageUploader = ({
         {label}
       </span>
 
-      <label className=' shado rounded p-2 w-full flex items-center justify-center cursor-pointer text-dark-purple bg-blue hover:bg-light-darker-blue text-[14px]'>
+      <label className=' shadow rounded p-2 w-full flex items-center justify-center cursor-pointer text-dark-purple bg-blue hover:bg-light-darker-blue text-[14px]'>
         <input
           type='file'
           accept='image/*'
