@@ -52,7 +52,7 @@ const PinturasPage = () => {
       ) : allProducts.length === 0 ? (
         <div className=' flex flex-col gap-6 justify-center items-center  w-full'>
           <div className='flex flex-row justify-center items-center w-fit bg-white rounded-3xl shadow-lg py-5 px-6 md:px-8'>
-            <h2 className='text-[22px] font-semibold'>
+            <h2 className='text-[16px] font-semibold'>
               Não há pinturas disponíveis
             </h2>
           </div>
@@ -65,7 +65,7 @@ const PinturasPage = () => {
               style={{
                 backgroundImage: 'url("/icons/Vector.svg")',
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 1rem center', 
+                backgroundPosition: 'right 1rem center',
                 backgroundSize: '1rem',
               }}
               value={selectedCategory}

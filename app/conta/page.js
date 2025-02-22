@@ -2,11 +2,17 @@
 import Button from '../components/Button'
 import getUserProfile from '@/services/userInfo'
 import { useEffect, useState } from 'react'
+import ModalFormularioProduto from '../components/ModalFormularioProduto'
 
 const ContaPage = () => {
   const [user, setUser] = useState({})
   const [error, setError] = useState('')
   const [selectedTab, setSelectedTab] = useState('TODOS')
+  const [openModal, setOpenModal] = useState(true)
+
+  const handleModal = () => {
+    setOpenModal(!openModal)
+  }
 
   const pedidos = [
     { id: 1111, data: '06/02/2024', detalhes: 'teste' },
@@ -96,7 +102,10 @@ const ContaPage = () => {
                       </button>
                     )
                   )}
-                  <button className='bg-blue text-brown px-4 py-2 rounded'>
+                  <button
+                    className='bg-blue text-brown px-4 py-2 rounded'
+                    onClick={handleModal}
+                  >
                     +
                   </button>
                 </div>
@@ -164,6 +173,7 @@ const ContaPage = () => {
           )}
         </div>
       </div>
+      {openModal && <ModalFormularioProduto closeModal={handleModal} />}
     </div>
   )
 }
