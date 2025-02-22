@@ -3,11 +3,21 @@ import React, { useState } from 'react'
 
 import Button from './Button'
 import Loading from './Loading'
+import InputComponent from './InputComponent'
+import SelectComponent from './SelectComponent'
+import ImageUploader from './ImageUploader'
+import PdfUploader from './PdfUploader'
 
 const ModalFormularioProduto = ({ closeModal }) => {
-  const [email, setEmail] = useState('')
-  const [confirmEmail, setConfirmEmail] = useState('')
+  const [titulo, setTitulo] = useState('')
+  const [descricao, setDescricao] = useState('')
+  const [preco, setPreco] = useState('')
+  const [imagens, setImages] = useState(null)
+  const [pdf, setPdf] = useState(null)
+  const [tipoPintura, setTipoPintura] = useState('')
+  const [idioma, setIdioma] = useState('')
   const [tipoProduto, setTipoProduto] = useState('')
+
   const [isLoading, setIsLoading] = useState(false)
 
   const saveProduct = async () => {
@@ -27,6 +37,36 @@ const ModalFormularioProduto = ({ closeModal }) => {
     return data */
   }
 
+  const receitaForm = (
+    <>
+      <SelectComponent
+        value={idioma}
+        setValue={setIdioma}
+        options={[
+          { value: 'ptbr', label: 'Português' },
+          { value: 'us', label: 'Inglês' },
+        ]}
+        label={'Idioma'}
+      />
+      <PdfUploader
+        label={'PDF do Produto'}
+        onPdfUpload={file => setPdf(file)}
+      />
+    </>
+  )
+  const pinturaForm = (
+    <SelectComponent
+      value={tipoPintura}
+      setValue={setTipoPintura}
+      options={[
+        { value: 'acrilica_guache', label: 'Pintura Acrílica/Guache' },
+        { value: 'aquarela', label: 'Aquarela' },
+        { value: 'print', label: 'Print' },
+      ]}
+      label={'Tipo de Pintura'}
+    />
+  )
+
   return (
     <>
       {isLoading ? (
@@ -37,7 +77,7 @@ const ModalFormularioProduto = ({ closeModal }) => {
           onClick={closeModal}
         >
           <div
-            className='bg-white p-10 rounded-lg min-w-[300px] max-w-[500px] w-1/2 flex flex-col gap-9'
+            className='bg-white p-10 rounded-lg min-w-[300px] max-w-[600px] max-h-screenHeader overflow-y-auto w-1/2 flex flex-col gap-9'
             onClick={e => e.stopPropagation()}
           >
             <h1 className='text-2xl font-bold text-dark-purple'>
@@ -45,69 +85,46 @@ const ModalFormularioProduto = ({ closeModal }) => {
             </h1>
             <form
               onSubmit={saveProduct}
-              className='flex flex-col gap-6'
+              className='flex flex-col gap-4 '
               onClick={e => e.stopPropagation()}
             >
-              <div className='flex flex-col gap-2'>
-                <span className='font-semibold text-sm text-dark-purple'>
-                  Tipo de Produto
-                </span>
-                <select
-                  className='border border-gray-300 rounded p-2 w-full appearance-none '
-                  style={{
-                    backgroundImage: 'url("/icons/arrow.svg")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundSize: '1.5rem',
-                  }}
-                  value={tipoProduto}
-                  onChange={e => setTipoProduto(e.target.value)}
-                >
-                  <option value='' disabled className='text-gray-50'>
-                    Selecione uma opção
-                  </option>
-                  <option value='amigurumi'>Amigurumi</option>
-                  <option value='pintura'>Pintura</option>
-                  <option value='receita'>Receita</option>
-                </select>
-              </div>
-              <div className='flex flex-col gap-2'>
-                <span className='font-semibold text-sm text-dark-purple'>
-                  Tipo de Pintura
-                </span>
-                <select
-                  className='border border-gray-300 rounded p-2 w-full appearance-none '
-                  style={{
-                    backgroundImage: 'url("/icons/arrow.svg")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundSize: '1.5rem',
-                  }}
-                  value={tipoProduto}
-                  onChange={e => setTipoProduto(e.target.value)}
-                >
-                  <option value='' disabled className='text-gray-50'>
-                    Selecione uma opção
-                  </option>
-                  <option value='amigurumi'>Amigurumi</option>
-                  <option value='pintura'>Pintura</option>
-                  <option value='receita'>Receita</option>
-                </select>
-              </div>
-              <div className='flex flex-col gap-2'>
-                <span className='font-semibold text-sm text-dark-purple'>
-                  Tipo de Pintura
-                </span>
-                <input
-                  type='email'
-                  value={email}
-                  required
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder='E-mail'
-                  className='border border-gray-300 rounded p-2 w-full'
-                />
-              </div>
-
+              <InputComponent
+                value={titulo}
+                setValue={setTitulo}
+                type={'text'}
+                placeholder={'Digite o título do produto'}
+                label={'Título'}
+              />
+              <InputComponent
+                value={descricao}
+                setValue={setDescricao}
+                type={'text'}
+                placeholder={'Digite a descrição do produto'}
+                label={'Descrição'}
+              />
+              <InputComponent
+                value={preco}
+                setValue={setPreco}
+                type={'preco'}
+                placeholder={'Digite o preço do produto'}
+                label={'Preço'}
+              />
+              <ImageUploader
+                label={'Imagem do Produto'}
+                onImageUpload={file => setImages(file)}
+              />
+              <SelectComponent
+                value={tipoProduto}
+                setValue={setTipoProduto}
+                options={[
+                  { value: 'amigurumi', label: 'Amigurumi' },
+                  { value: 'pintura', label: 'Pintura' },
+                  { value: 'receita', label: 'Receita' },
+                ]}
+                label={'Tipo de Produto'}
+              />
+              {tipoProduto === 'receita' && receitaForm}
+              {tipoProduto === 'pintura' && pinturaForm}
               <div className='flex justify-end'>
                 <Button
                   variant={'brown'}
