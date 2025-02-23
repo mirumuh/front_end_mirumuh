@@ -16,7 +16,7 @@ const AmigurumisPage = () => {
       const filteredProducts = response.filter(
         product =>
           product.metadata &&
-          product.metadata.tipo === 'amigurimi' &&
+          product.metadata.tipo === 'amigurumi' &&
           product.active
       )
       setAllProducts(filteredProducts)
