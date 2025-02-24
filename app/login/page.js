@@ -41,6 +41,7 @@ const LoginPage = () => {
     setIsLoading(true)
     try {
       //verificacao de usuario aqui algum dia
+      console.log('Dados enviados:', { email, password, name, birthdate });
       const response = await register({ email, password, name, birthdate })
       if (response) {
         setSuccessMessage('Usuário cadastrado com sucesso!')
@@ -55,7 +56,7 @@ const LoginPage = () => {
         }, 2000)
       }
     } catch (error) {
-      console.error('Erro ao cadastrar:', error)
+      console.error('Erro ao cadastrar:', error.response ? error.response.data : error);
     } finally {
       setIsLoading(false)
     }
