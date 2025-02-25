@@ -1,8 +1,8 @@
 'use client'
 import Receita from '../components/Receita'
-import getProductsWithPrice from '@/services/getProducts'
 import { useEffect, useState } from 'react'
 import Loading from '../components/Loading'
+import getProductsWithPrice from '@/services/Products/getProducts'
 
 const Receitas = () => {
   const [allProducts, setAllProducts] = useState([])
