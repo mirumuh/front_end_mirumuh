@@ -1,22 +1,8 @@
 import { api } from './api'
 
 export default async function getUserProfile() {
-  const token = sessionStorage.getItem('token')
-
-  if (!token) {
-    throw new Error('Token não encontrado')
-  }
-
   try {
-    const { data: response } = await api.post(
-      `/profile`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    const { data: response } = await api.post(`/profile`, {})
 
     const user = response?.user || {}
 

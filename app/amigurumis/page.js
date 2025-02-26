@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Loading from '../components/Loading'
 import GridProducts from '../components/GridProducts'
-import getProductsWithPrice from '@/services/getProducts'
+import getProductsWithPrice from '@/services/Products/getProducts'
 
 const AmigurumisPage = () => {
   const [allProducts, setAllProducts] = useState([])

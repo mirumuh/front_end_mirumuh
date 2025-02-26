@@ -3,6 +3,7 @@ import Button from '../components/Button'
 import getUserProfile from '@/services/userInfo'
 import { useEffect, useState } from 'react'
 import ModalFormularioProduto from '../components/ModalFormularioProduto'
+import Image from 'next/image'
 
 const ContaPage = () => {
   const [user, setUser] = useState({})
@@ -123,17 +124,21 @@ const ContaPage = () => {
                       <p>{produto.nome}</p>
                       <div className='flex gap-4 '>
                         <button className='text-brown'>
-                          <img
+                          <Image
                             src='/icons/excluir.svg'
                             alt='Excluir'
                             className='w-5 h-5'
+                            width={20}
+                            height={20}
                           />
                         </button>
                         <button className='text-blue-500'>
-                          <img
+                          <Image
                             src='/icons/editar.svg'
                             alt='Editar'
                             className='w-5 h-5'
+                            width={20}
+                            height={20}
                           />
                         </button>
                       </div>
