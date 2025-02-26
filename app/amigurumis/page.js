@@ -46,9 +46,6 @@ const AmigurumisPage = () => {
           </div>
         ) : (
           <div className='py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14 flex flex-col items-center justify-center w-full gap-10'>
-            <div className='flex flex-col items-center justify-center w-full'>
-              filtro aqui
-            </div>
             <div className='grid grid-cols-1 gap-6 px-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 '>
               {allProducts.map((amigurimi, index) => (
                 <GridProducts

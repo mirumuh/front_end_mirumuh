@@ -1,7 +1,15 @@
 import { api } from './api'
 
-export default async function getProductsWithPrice() {
-  const { data: response } = await api.get(`/available-products`)
+export default async function getProductsWithPrice(category = '') {
+  const url = category
+    ? `/available-products?value=${category}`
+    : '/available-products' 
 
-  return response || []
+  try {
+    const { data: response } = await api.get(url)
+    return response || [] 
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error)
+    throw error 
+  }
 }
