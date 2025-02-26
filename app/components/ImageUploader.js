@@ -1,89 +1,86 @@
-import Image from 'next/image'
-import React, { useState } from 'react'
+'use client'
+import { useEffect, useState } from 'react'
 
-const MultiImageUploader = ({
-  label,
-  onImagesUpload,
-  maxImages = 8,
-  maxSizeMB = 2,
-}) => {
-  const [images, setImages] = useState([])
+const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY
+const SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
 
-  const handleFileChange = e => {
-    const files = Array.from(e.target.files)
+const GoogleDrivePicker = ({ onSelect }) => {
+  const [tokenClient, setTokenClient] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
+  const [pickerLoaded, setPickerLoaded] = useState(false)
 
-    // Filtra as imagens que respeitam o tamanho e o limite de quantidade
-    const validImages = files
-      .filter(file => file.size <= maxSizeMB * 1024 * 1024)
-      .slice(0, maxImages - images.length)
+  useEffect(() => {
+    const loadScripts = () => {
+      // Carregar API do Google Picker
+      const script1 = document.createElement('script')
+      script1.src = 'https://apis.google.com/js/api.js'
+      script1.onload = () => {
+        window.gapi.load('client:picker', () => {
+          setPickerLoaded(true)
+          window.gapi.client.load('drive', 'v3')
+        })
+      }
+      document.body.appendChild(script1)
 
-    if (validImages.length === 0) {
-      alert(
-        `Selecione imagens menores que ${maxSizeMB}MB e até ${maxImages} no total.`
-      )
+      // Carregar Google Identity Services
+      const script2 = document.createElement('script')
+      script2.src = 'https://accounts.google.com/gsi/client'
+      script2.onload = () => {
+        if (window.google) {
+          setTokenClient(
+            window.google.accounts.oauth2.initTokenClient({
+              client_id: CLIENT_ID,
+              scope: SCOPES,
+              callback: response => {
+                if (response.access_token) {
+                  setAccessToken(response.access_token)
+                  openPicker(response.access_token)
+                }
+              },
+              prompt: '', // Remove necessidade de consentimento toda vez
+            })
+          )
+        }
+      }
+      document.body.appendChild(script2)
+    }
+
+    loadScripts()
+  }, [])
+
+  const openPicker = token => {
+    if (!pickerLoaded || !token || !window.google || !window.google.picker)
       return
-    }
 
-    const newImages = validImages.map(file => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }))
+    const picker = new google.picker.PickerBuilder()
+      .addView(google.picker.ViewId.DOCS_IMAGES)
+      .setOAuthToken(token)
+      .setDeveloperKey(API_KEY)
+      .setCallback(pickerCallback)
+      .setOrigin(window.location.origin) // Permite que pop-ups venham do mesmo domínio
+      .build()
 
-    const updatedImages = [...images, ...newImages].slice(0, maxImages)
-    setImages(updatedImages)
-
-    if (onImagesUpload) {
-      onImagesUpload(updatedImages.map(img => img.file))
-    }
+    picker.setVisible(true)
   }
 
-  const removeImage = index => {
-    const updatedImages = images.filter((_, i) => i !== index)
-    setImages(updatedImages)
-
-    if (onImagesUpload) {
-      onImagesUpload(updatedImages.map(img => img.file))
+  const pickerCallback = data => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const file = data.docs[0]
+      const imageUrl = `https://drive.google.com/uc?id=${file.id}`
+      onSelect(imageUrl)
     }
   }
 
   return (
-    <div className='flex flex-col gap-2'>
-      <span className='font-semibold text-sm text-dark-purple'>
-        {label}
-      </span>
-
-      <label className=' shadow rounded p-2 w-full flex items-center justify-center cursor-pointer text-dark-purple bg-blue hover:bg-light-darker-blue text-[14px]'>
-        <input
-          type='file'
-          accept='image/*'
-          multiple
-          onChange={handleFileChange}
-          className='hidden'
-        />
-        Selecione até {maxImages} imagens (Máx: {maxSizeMB}MB cada)
-      </label>
-
-      <div className='grid grid-cols-4 gap-2 mt-2'>
-        {images.map((img, index) => (
-          <div key={index} className='relative'>
-            <Image
-              src={img.preview}
-              alt={`Imagem ${index + 1}`}
-              className='rounded-lg w-full h-24 object-cover border border-gray-300'
-              width={300}
-              height={300}
-            />
-            <button
-              onClick={() => removeImage(index)}
-              className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs'
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+    <button
+      type='button'
+      onClick={() => tokenClient?.requestAccessToken()}
+      className='bg-blue-500 px-4 py-2 rounded'
+    >
+      Selecionar do Google Drive
+    </button>
   )
 }
 
-export default MultiImageUploader
+export default GoogleDrivePicker

@@ -7,6 +7,10 @@ import InputComponent from './InputComponent'
 import SelectComponent from './SelectComponent'
 import ImageUploader from './ImageUploader'
 import PdfUploader from './PdfUploader'
+import saveProducts from '@/services/Products/saveProducts'
+import uploadPdfReceita from '@/services/uploadPdf'
+import GoogleDrivePicker from './ImageUploader'
+import Image from 'next/image'
 
 const ModalFormularioProduto = ({ closeModal }) => {
   const [titulo, setTitulo] = useState('')
@@ -20,21 +24,80 @@ const ModalFormularioProduto = ({ closeModal }) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const saveProduct = async () => {
-    /* setIsLoading(true)
-    const response = await fetch('/api/save-product', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        confirmEmail,
-      }),
-    })
-    const data = await response.json()
-    setIsLoading(false)
-    return data */
+  const formatPrice = price => {
+    const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ''))
+    return isNaN(numericPrice) ? 0 : Math.round(numericPrice * 100)
+  }
+
+  const saveProduct = async e => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const receitaData = {
+        active: true,
+        name: titulo,
+        description: descricao,
+        price: formatPrice(preco),
+        currency: 'brl',
+        images: imagens,
+        metadata: {
+          tipo: tipoProduto,
+          idioma: idioma,
+        },
+      }
+      console.log(receitaData)
+      const amigurumiData = {
+        active: true,
+        name: titulo,
+        description: descricao,
+        price: formatPrice(preco),
+        currency: 'brl',
+        images: imagens,
+        metadata: {
+          tipo: tipoProduto,
+        },
+      }
+      console.log(amigurumiData)
+      const pinturaData = {
+        active: true,
+        name: titulo,
+        description: descricao,
+        price: formatPrice(preco),
+        currency: 'brl',
+        images: imagens,
+        metadata: {
+          tipo: tipoProduto,
+          tipoPintura: tipoPintura,
+        },
+      }
+      console.log(pinturaData)
+      let data = {}
+      if (tipoProduto === 'receita') {
+        data = receitaData
+      } else if (tipoProduto === 'amigurumi') {
+        data = amigurumiData
+      } else if (tipoProduto === 'pintura') {
+        data = pinturaData
+      }
+      const response = await saveProducts(data)
+
+      if (tipoProduto === 'receita' && pdf) {
+        await uploadPdfReceita(pdf)
+      }
+
+      if (response) {
+        alert('Produto salvo com sucesso!')
+        console.log(response)
+        closeModal()
+      } else {
+        alert('Erro ao salvar produto!')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+
+    return data
   }
 
   const receitaForm = (
@@ -109,10 +172,24 @@ const ModalFormularioProduto = ({ closeModal }) => {
                 placeholder={'Digite o preço do produto'}
                 label={'Preço'}
               />
-              <ImageUploader
+              {/* <ImageUploader
                 label={'Imagem do Produto'}
                 onImageUpload={file => setImages(file)}
+              /> */}{' '}
+              <GoogleDrivePicker
+                onFileSelect={fileUrl => setImages([...imagens, fileUrl])}
               />
+              {imagens &&
+                imagens?.map((img, index) => (
+                  <Image
+                    key={index}
+                    src={img}
+                    alt='Imagem do Google Drive'
+                    className='w-20 h-20 mt-2'
+                    width={80}
+                    height={80}
+                  />
+                ))}
               <SelectComponent
                 value={tipoProduto}
                 setValue={setTipoProduto}
