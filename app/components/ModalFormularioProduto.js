@@ -5,7 +5,6 @@ import Button from './Button'
 import Loading from './Loading'
 import InputComponent from './InputComponent'
 import SelectComponent from './SelectComponent'
-import ImageUploader from './ImageUploader'
 import PdfUploader from './PdfUploader'
 import saveProducts from '@/services/Products/saveProducts'
 import uploadPdfReceita from '@/services/uploadPdf'
@@ -16,7 +15,7 @@ const ModalFormularioProduto = ({ closeModal }) => {
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
-  const [imagens, setImages] = useState(null)
+  const [imagens, setImagens] = useState()
   const [pdf, setPdf] = useState(null)
   const [tipoPintura, setTipoPintura] = useState('')
   const [idioma, setIdioma] = useState('')
@@ -46,7 +45,6 @@ const ModalFormularioProduto = ({ closeModal }) => {
           idioma: idioma,
         },
       }
-      console.log(receitaData)
       const amigurumiData = {
         active: true,
         name: titulo,
@@ -58,7 +56,6 @@ const ModalFormularioProduto = ({ closeModal }) => {
           tipo: tipoProduto,
         },
       }
-      console.log(amigurumiData)
       const pinturaData = {
         active: true,
         name: titulo,
@@ -71,8 +68,9 @@ const ModalFormularioProduto = ({ closeModal }) => {
           tipoPintura: tipoPintura,
         },
       }
-      console.log(pinturaData)
+
       let data = {}
+
       if (tipoProduto === 'receita') {
         data = receitaData
       } else if (tipoProduto === 'amigurumi') {
@@ -80,6 +78,9 @@ const ModalFormularioProduto = ({ closeModal }) => {
       } else if (tipoProduto === 'pintura') {
         data = pinturaData
       }
+
+      console.log(data)
+
       const response = await saveProducts(data)
 
       if (tipoProduto === 'receita' && pdf) {
@@ -96,8 +97,6 @@ const ModalFormularioProduto = ({ closeModal }) => {
     } finally {
       setIsLoading(false)
     }
-
-    return data
   }
 
   const receitaForm = (
@@ -176,19 +175,10 @@ const ModalFormularioProduto = ({ closeModal }) => {
                 label={'Imagem do Produto'}
                 onImageUpload={file => setImages(file)}
               /> */}{' '}
-              <GoogleDrivePicker
-                onFileSelect={fileUrl => setImages([...imagens, fileUrl])}
-              />
+              <GoogleDrivePicker setImages={setImagens} />
               {imagens &&
                 imagens?.map((img, index) => (
-                  <Image
-                    key={index}
-                    src={img}
-                    alt='Imagem do Google Drive'
-                    className='w-20 h-20 mt-2'
-                    width={80}
-                    height={80}
-                  />
+                  <span key={index}>{img}</span>
                 ))}
               <SelectComponent
                 value={tipoProduto}

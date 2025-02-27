@@ -13,12 +13,12 @@ const Produtos = ({
   onClickBuy,
   arrayImagens,
 }) => {
-  /*  const [selectedImage, setSelectedImage] = useState()
-  const [currentIndex, setCurrentIndex] = useState(0) */
+  const [selectedImage, setSelectedImage] = useState()
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   const [isLoading, setIsLoading] = useState(true)
 
-  /*  const renderImages = (images, size) => {
+  const renderImages = (images, size) => {
     return images.map((src, index) => (
       <div
         key={index}
@@ -52,7 +52,7 @@ const Produtos = ({
     const newIndex = (currentIndex + 1) % arrayImagens.length
     setSelectedImage(arrayImagens[newIndex])
     setCurrentIndex(newIndex)
-  } */
+  }
 
   const handleImageLoad = () => {
     setIsLoading(false)
@@ -62,11 +62,11 @@ const Produtos = ({
       {/* Desktop */}
       <div className='hidden md:flex justify-between items-center px-60 pt-14 pb-16 w-full gap-20'>
         <div className='flex justify-center items-center w-1/2 gap-5'>
-          {/*  <div className='flex flex-col gap-5'>
+          <div className='flex flex-col gap-5'>
             {renderImages(arrayImagens, 'min-h-32')}
-          </div> */}
+          </div>
           <div className='bg-white w-full h-128 rounded-lg shadow-lg flex justify-center items-center gap-2'>
-            {/*   <Button label='&lt;' onClick={handlePrevImage} /> */}
+            <Button label='&lt;' onClick={handlePrevImage} />
             <div className='flex justify-center p-3 items-center object-scale-down'>
               {isLoading && (
                 <div className='absolute inset-0 flex justify-center items-center'>
@@ -84,7 +84,7 @@ const Produtos = ({
                 onLoadingComplete={handleImageLoad}
               />
             </div>
-            {/*  <Button label='&gt;' onClick={handleNextImage} /> */}
+            <Button label='&gt;' onClick={handleNextImage} />
           </div>
         </div>
         <div className='flex flex-col gap-16 p-5 bg-white shadow-lg w-1/2 min-h-144 rounded-lg'>
@@ -118,7 +118,7 @@ const Produtos = ({
           <BackButton />
           <div className='flex flex-col justify-center items-center gap-10 h-full'>
             <div className='w-full h-128 flex justify-center items-center gap-10'>
-              {/*    <Button label='&lt;' onClick={handlePrevImage} /> */}
+              <Button label='&lt;' onClick={handlePrevImage} />
               <div className='flex justify-center p-3 items-center object-scale-down'>
                 <Image
                   src={arrayImagens[0]}
@@ -129,7 +129,7 @@ const Produtos = ({
                   loader={({ src }) => src}
                 />
               </div>
-              {/*    <Button label='&gt;' onClick={handleNextImage} /> */}
+              <Button label='&gt;' onClick={handleNextImage} />
             </div>
             <div className='flex flex-col gap-5 px-2'>
               <span className='text-4xl font-moreSugar text-center'>

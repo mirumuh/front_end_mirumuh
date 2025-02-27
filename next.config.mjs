@@ -2,7 +2,18 @@
 const nextConfig = {
   images: {
     domains: ['files.stripe.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'drive.google.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
   },
+
   async headers() {
     return [
       {
@@ -10,11 +21,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups', // Permite que pop-ups funcionem corretamente
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp',
+            value: 'same-origin-allow-popups',
           },
         ],
       },
