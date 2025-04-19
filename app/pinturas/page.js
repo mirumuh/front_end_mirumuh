@@ -4,33 +4,35 @@ import React, { useEffect, useState } from 'react'
 import Loading from '../components/Loading'
 import GridProducts from '../components/GridProducts'
 import getProductsWithPrice from '@/services/Products/getProducts'
+import ModalRedirecionamento from '../components/ModalRedirecionamento'
 
 const PinturasPage = () => {
   const [allProducts, setAllProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('')
   const [filteredProducts, setFilteredProducts] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const fetchProduto = async (category = '') => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const response = await getProductsWithPrice(category); 
+      const response = await getProductsWithPrice(category)
       const filteredProducts = response.filter(
         product =>
           product.metadata && product.metadata.pintura && product.active
-      );
+      )
 
-      setAllProducts(filteredProducts);
+      setAllProducts(filteredProducts)
     } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
+      console.error('Erro ao buscar produtos:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchProduto(selectedCategory); 
-  }, [selectedCategory]); 
+    fetchProduto(selectedCategory)
+  }, [selectedCategory])
 
   useEffect(() => {
     if (selectedCategory) {
@@ -38,11 +40,11 @@ const PinturasPage = () => {
         allProducts.filter(
           produto => produto.category === selectedCategory
         )
-      );
+      )
     } else {
-      setFilteredProducts(allProducts);
+      setFilteredProducts(allProducts)
     }
-  }, [selectedCategory, allProducts]);
+  }, [selectedCategory, allProducts])
 
   return (
     <div className='w-full h-screenHeader overflow-y-auto flex flex-col items-center '>
@@ -58,7 +60,14 @@ const PinturasPage = () => {
         </div>
       ) : (
         <div className='py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14 flex flex-col items-center justify-center w-full gap-10'>
-          <div className='flex flex-col w-full items-center justify-center md:items-end md:justify-end md:pe-52'>
+          <div className='flex flex-col md:flex-row w-full items-center justify-center md:items-end md:justify-end md:pe-52 gap-4'>
+            <button
+              className='p-3 border-2 border-brown rounded-lg shadow-lg w-64 bg-brown text-white focus:outline-none'
+              onClick={() => setIsModalOpen(true)}
+            >
+              Encomende sua pintura
+            </button>
+
             <select
               className='p-3 border-2 border-brown rounded-lg shadow-lg w-64 appearance-none focus:outline-none'
               style={{
@@ -77,6 +86,11 @@ const PinturasPage = () => {
               <option value='aquarela'>Aquarela</option>
               <option value='print'>Print</option>
             </select>
+
+            <ModalRedirecionamento
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+            />
           </div>
 
           <div className='grid grid-cols-1 gap-6 px-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 '>
@@ -84,7 +98,7 @@ const PinturasPage = () => {
               <GridProducts
                 key={index}
                 product={pintura}
-                buttonLabel='Ver Pintura'
+                buttonLabel='Comprar'
               />
             ))}
           </div>
