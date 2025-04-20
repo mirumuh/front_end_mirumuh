@@ -32,7 +32,7 @@ const ModalRedirecionamento = ({ isOpen, onClose }) => {
         </h2>
 
         <p className='text-brown text-justify p-2 mt-4'>
-          Verifique a disponibilidade da agenda e entre em contato comigo!
+          Cada produto é único, então verifique a disponibilidade da agenda e entre em contato comigo!
           Para reservar sua posição na fila basta pagar{' '}
           <strong>50% do valor combinado da encomenda</strong>.
         </p>

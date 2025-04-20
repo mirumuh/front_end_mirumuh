@@ -105,7 +105,7 @@ const Produtos = ({
               /> */}
             </div>
             <Button
-              label='Comprar'
+              label='Encomendar'
               variant={'brown'}
               onClick={onClickBuy}
             />
@@ -145,7 +145,7 @@ const Produtos = ({
               /> */}
             </div>
             <Button
-              label='Comprar'
+              label='Encomendar'
               variant={'brown'}
               onClick={onClickBuy}
             />
