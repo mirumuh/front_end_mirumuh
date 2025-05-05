@@ -10,6 +10,7 @@ import saveProducts from '@/services/Products/saveProducts'
 import uploadPdfReceita from '@/services/uploadPdf'
 import GoogleDrivePicker from './ImageUploader'
 import Image from 'next/image'
+import { CldUploadWidget } from 'next-cloudinary'
 
 const ModalFormularioProduto = ({ closeModal }) => {
   const [titulo, setTitulo] = useState('')
@@ -78,6 +79,14 @@ const ModalFormularioProduto = ({ closeModal }) => {
       } else if (tipoProduto === 'pintura') {
         data = pinturaData
       }
+
+      //   [
+
+      // {
+
+      // //public_id
+      // // https://res.cloudinary.com/djtmwpq1g/image/upload/v1746312472/WhatsApp_Image_2025-05-03_at_19.47.25_w9apux.jpg
+      // }]
 
       console.log(data)
 
@@ -175,7 +184,19 @@ const ModalFormularioProduto = ({ closeModal }) => {
                 label={'Imagem do Produto'}
                 onImageUpload={file => setImages(file)}
               /> */}{' '}
-              <GoogleDrivePicker setImages={setImagens} />
+              {/* <GoogleDrivePicker setImages={setImagens} /> */}
+              <CldUploadWidget signatureEndpoint='/services/uploadImages'>
+                {({ open }) => {
+                  return (
+                    <button
+                      onClick={() => open()}
+                      className='bg-blue-500 px-4 py-2 rounded'
+                    >
+                      Selecionar Imagens
+                    </button>
+                  )
+                }}
+              </CldUploadWidget>
               {imagens &&
                 imagens?.map((img, index) => (
                   <span key={index}>{img}</span>
