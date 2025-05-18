@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Button from './Button'
 import Loading from './Loading'
@@ -11,8 +11,14 @@ import uploadPdfReceita from '@/services/uploadPdf'
 import GoogleDrivePicker from './ImageUploader'
 import Image from 'next/image'
 import { CldUploadWidget } from 'next-cloudinary'
+import getProductsById from '@/services/Products/getProductsById'
+import editProducts from '@/services/Products/editProducts'
 
-const ModalFormularioProduto = ({ closeModal }) => {
+const ModalFormularioProduto = ({
+  closeModal,
+  idProduct,
+  atualizarProdutos,
+}) => {
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
@@ -21,13 +27,16 @@ const ModalFormularioProduto = ({ closeModal }) => {
   const [tipoPintura, setTipoPintura] = useState('')
   const [idioma, setIdioma] = useState('')
   const [tipoProduto, setTipoProduto] = useState('')
-
   const [isLoading, setIsLoading] = useState(false)
+  const [loadingProdutos, setLoadingProdutos] = useState(false)
 
   const formatPrice = price => {
-    const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ''))
+    if (!price) return 0
+    const cleaned = price.replace(/[^\d,.-]/g, '').replace(',', '.')
+    const numericPrice = parseFloat(cleaned)
     return isNaN(numericPrice) ? 0 : Math.round(numericPrice * 100)
   }
+  console.log(idProduct)
 
   const saveProduct = async e => {
     e.preventDefault()
@@ -40,30 +49,39 @@ const ModalFormularioProduto = ({ closeModal }) => {
         description: descricao,
         price: formatPrice(preco),
         currency: 'brl',
-        images: imagens,
+        images: imagens ?? [
+          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
+        ],
         metadata: {
           tipo: tipoProduto,
           idioma: idioma,
         },
       }
+
       const amigurumiData = {
         active: true,
         name: titulo,
         description: descricao,
         price: formatPrice(preco),
         currency: 'brl',
-        images: imagens,
+        images: imagens ?? [
+          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
+        ],
         metadata: {
           tipo: tipoProduto,
+          quantidade: 1,
         },
       }
+
       const pinturaData = {
         active: true,
         name: titulo,
         description: descricao,
         price: formatPrice(preco),
         currency: 'brl',
-        images: imagens,
+        images: imagens ?? [
+          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
+        ],
         metadata: {
           tipo: tipoProduto,
           tipoPintura: tipoPintura,
@@ -80,16 +98,6 @@ const ModalFormularioProduto = ({ closeModal }) => {
         data = pinturaData
       }
 
-      //   [
-
-      // {
-
-      // //public_id
-      // // https://res.cloudinary.com/djtmwpq1g/image/upload/v1746312472/WhatsApp_Image_2025-05-03_at_19.47.25_w9apux.jpg
-      // }]
-
-      console.log(data)
-
       const response = await saveProducts(data)
 
       if (tipoProduto === 'receita' && pdf) {
@@ -98,10 +106,42 @@ const ModalFormularioProduto = ({ closeModal }) => {
 
       if (response) {
         alert('Produto salvo com sucesso!')
-        console.log(response)
+        atualizarProdutos && atualizarProdutos()
         closeModal()
       } else {
         alert('Erro ao salvar produto!')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const editProduct = async e => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const response = await editProducts(idProduct, {
+        name: titulo,
+        description: descricao,
+        price: formatPrice(preco),
+        currency: 'brl',
+        images: imagens ?? [
+          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
+        ],
+        metadata: {
+          tipo: tipoProduto,
+          idioma: idioma,
+          tipoPintura: tipoPintura,
+          pdf: pdf,
+        },
+      })
+
+      if (response) {
+        alert('Produto editado com sucesso!')
+        atualizarProdutos && atualizarProdutos()
+        closeModal()
+      } else {
+        alert('Erro ao editar produto!')
       }
     } finally {
       setIsLoading(false)
@@ -138,9 +178,52 @@ const ModalFormularioProduto = ({ closeModal }) => {
     />
   )
 
+  const handleUpload = result => {
+    if (result?.info?.secure_url) {
+      setImagens(prev => {
+        // impede mais de 8 imagens
+        if (prev.length >= 8) return prev
+        return [...prev, result.info.secure_url]
+      })
+    }
+  }
+
+  const fetchProdutoById = async id => {
+    setLoadingProdutos(true)
+    try {
+      const response = await getProductsById(id)
+      console.log(response)
+
+      setTitulo(response.name)
+      setDescricao(response.description)
+      setPreco(
+        new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+          minimumFractionDigits: 2,
+        }).format(response.prices[0].amount / 100)
+      )
+      setImagens(response.images)
+      setTipoProduto(response.metadata?.tipo)
+      setTipoPintura(response.metadata?.tipoPintura)
+      setIdioma(response.metadata?.idioma)
+      setPdf(response.metadata?.pdf)
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setLoadingProdutos(false)
+    }
+  }
+
+  useEffect(() => {
+    if (idProduct) {
+      fetchProdutoById(idProduct)
+    }
+  }, [idProduct])
+
   return (
     <>
-      {isLoading ? (
+      {isLoading || loadingProdutos ? (
         <Loading />
       ) : (
         <div
@@ -152,10 +235,10 @@ const ModalFormularioProduto = ({ closeModal }) => {
             onClick={e => e.stopPropagation()}
           >
             <h1 className='text-2xl font-bold text-dark-purple'>
-              Adicionar Produto
+              {idProduct ? 'Editar Produto' : 'Adicionar Produto'}
             </h1>
             <form
-              onSubmit={saveProduct}
+              onSubmit={idProduct ? editProduct : saveProduct}
               className='flex flex-col gap-4 '
               onClick={e => e.stopPropagation()}
             >
@@ -185,11 +268,31 @@ const ModalFormularioProduto = ({ closeModal }) => {
                 onImageUpload={file => setImages(file)}
               /> */}{' '}
               {/* <GoogleDrivePicker setImages={setImagens} /> */}
-              <CldUploadWidget signatureEndpoint='/services/uploadImages'>
+              <CldUploadWidget
+                signatureEndpoint='/services/uploadImages'
+                options={{
+                  maxFiles: 8,
+                  multiple: true,
+                  sources: ['local', 'camera', 'url'],
+                  resourceType: 'image',
+                }}
+                uploadPreset='ml_default'
+              >
                 {({ open }) => {
                   return (
                     <button
-                      onClick={() => open()}
+                      onClick={() => {
+                        const result = open()
+                        if (result?.length) {
+                          const urls = result
+                            .map(r => r?.secure_url)
+                            .filter(Boolean)
+                            .slice(0, 8 - imageUrls.length)
+
+                          setImagens(prev => [...prev, ...urls])
+                        }
+                      }}
+                      type='button'
                       className='bg-blue-500 px-4 py-2 rounded'
                     >
                       Selecionar Imagens

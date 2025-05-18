@@ -4,7 +4,7 @@ export default async function getUserProfile() {
   try {
     const { data: response } = await api.post(`/profile`, {})
 
-    const user = response?.user || {}
+    const user = response || {}
 
     return user
   } catch (error) {

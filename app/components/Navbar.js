@@ -32,14 +32,8 @@ const Navbar = ({ isOpen, closeMenu }) => {
   ]
 
   const handleLinkClick = path => {
-    if (
-      !logado &&
-      (path === '/receitas' || path === '/amigurumis' || path === '/artes')
-    ) {
-      window.location.href = '/login'
-    } else {
-      closeMenu()
-    }
+    window.location.href = path
+    closeMenu()
   }
 
   return (

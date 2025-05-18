@@ -5,35 +5,101 @@ import { useEffect, useState } from 'react'
 import ModalFormularioProduto from '../components/ModalFormularioProduto'
 import Image from 'next/image'
 import Loading from '../components/Loading'
+import getProductsWithPrice from '@/services/Products/getProducts'
 
 const ContaPage = () => {
+  const is_carol = process.env.NEXT_PUBLIC_IS_CAROL
   const [user, setUser] = useState({})
+  const [role, setRole] = useState('')
   const [error, setError] = useState('')
-  const [selectedTab, setSelectedTab] = useState('TODOS')
+  const [selectedTab, setSelectedTab] = useState('all')
   const [loading, setLoading] = useState(false)
+  const [loadingProdutos, setLoadingProdutos] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [openModalEditar, setOpenModalEditar] = useState(false)
+  const [pedidos, setPedidos] = useState([])
+  const [produtos, setProdutos] = useState([])
+  const [idProduct, setIdProduct] = useState('')
 
   const handleModal = () => {
     setOpenModal(!openModal)
   }
 
-  const pedidos = [
-    { id: 1111, data: '06/02/2024', detalhes: 'teste' },
-    { id: 1112, data: '07/02/2024', detalhes: 'testindo' },
-    { id: 1113, data: '08/02/2024', detalhes: 'TESTE' },
+  const handleModalEditar = id => {
+    setOpenModalEditar(!openModalEditar)
+    setIdProduct(id)
+  }
+
+  const categories = [
+    { id: 1, name: 'TODOS', value: 'all' },
+    { id: 2, name: 'RECEITAS', value: 'receita' },
+    { id: 3, name: 'AMIGURUMIS', value: 'amigurumi' },
+    { id: 4, name: 'PINTURAS', value: 'pintura' },
   ]
 
-  const produtos = [
-    { id: 1, nome: 'PTBR - Coelho Dragão' },
-    { id: 2, nome: 'US - Dragon Rabbit' },
-    { id: 3, nome: 'PTBR - Coelho Gélido Natalino' },
-  ]
+  const fetchAllProduto = async () => {
+    setLoadingProdutos(true)
+    try {
+      const response = await getProductsWithPrice()
+      const filteredProducts = response.filter(product => product.active)
+      setProdutos(filteredProducts)
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setLoadingProdutos(false)
+    }
+  }
+
+  const fetchProdutoByCategory = async category => {
+    setLoadingProdutos(true)
+    try {
+      const response = await getProductsWithPrice(category)
+      const filteredProducts = response.filter(product => product.active)
+      setProdutos(filteredProducts)
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setLoadingProdutos(false)
+    }
+  }
+
+  useEffect(() => {
+    if (role === is_carol) {
+      if (selectedTab === 'all') {
+        fetchAllProduto()
+      } else {
+        fetchProdutoByCategory(selectedTab)
+      }
+    }
+  }, [is_carol, role, selectedTab])
+
+  const atualizarProdutos = () => {
+    if (selectedTab === 'all') {
+      fetchAllProduto()
+    } else {
+      fetchProdutoByCategory(selectedTab)
+    }
+  }
+
+  useEffect(() => {
+    if (role !== is_carol) {
+      setPedidos(user.orders)
+    }
+  }, [is_carol, role, user])
+
+  console.log(user)
+
+  // const pedidos = [
+  //   { id: 1111, data: '06/02/2024', detalhes: 'teste' },
+  //   { id: 1112, data: '07/02/2024', detalhes: 'testindo' },
+  //   { id: 1113, data: '08/02/2024', detalhes: 'TESTE' },
+  // ]
 
   const handleLogout = () => {
     sessionStorage.removeItem('token')
     setTimeout(() => {
       window.location.href = '/login'
-    }, 500) // Pequeno delay para evitar problemas
+    }, 500)
   }
 
   useEffect(() => {
@@ -41,7 +107,8 @@ const ContaPage = () => {
       setLoading(true)
       try {
         const data = await getUserProfile()
-        setUser(data)
+        setRole(data.role)
+        setUser(data.user)
       } catch (error) {
         setError('Não foi possível carregar os dados do usuário!')
       } finally {
@@ -59,6 +126,14 @@ const ContaPage = () => {
         </div>
       </div>
     )
+  }
+
+  // Função utilitária para formatar data para o padrão brasileiro (dd/mm/yyyy)
+  const formatarDataBR = dataISO => {
+    if (!dataISO) return ''
+    const data = new Date(dataISO)
+    if (isNaN(data)) return dataISO // fallback se não for data válida
+    return data.toLocaleDateString('pt-BR')
   }
 
   return (
@@ -93,7 +168,7 @@ const ContaPage = () => {
                 </div>
               </div>
 
-              {user?.email === 'teste@gmail.com' ? (
+              {role === is_carol ? (
                 <div className='bg-white rounded-3xl shadow-lg mt-6'>
                   <div className='bg-blue p-3 rounded-t-lg'>
                     <h2 className='text-lg font-bold text-brown pl-2'>
@@ -102,21 +177,19 @@ const ContaPage = () => {
                   </div>
                   <div className='p-6'>
                     <div className='flex gap-4 mb-4'>
-                      {['TODOS', 'RECEITAS', 'AMIGURUMI', 'PINTURAS'].map(
-                        tab => (
-                          <button
-                            key={tab}
-                            className={`px-4 py-2 rounded relative ${
-                              selectedTab === tab
-                                ? 'border-b-4 border-blue'
-                                : 'bg-white'
-                            }`}
-                            onClick={() => setSelectedTab(tab)}
-                          >
-                            {tab}
-                          </button>
-                        )
-                      )}
+                      {categories.map(tab => (
+                        <button
+                          key={tab.value}
+                          className={`px-4 py-2 rounded relative ${
+                            selectedTab === tab.value
+                              ? 'border-b-4 border-blue'
+                              : 'bg-white'
+                          }`}
+                          onClick={() => setSelectedTab(tab.value)}
+                        >
+                          {tab.name}
+                        </button>
+                      ))}
                       <button
                         className='bg-blue text-brown px-4 py-2 rounded'
                         onClick={handleModal}
@@ -124,66 +197,75 @@ const ContaPage = () => {
                         +
                       </button>
                     </div>
-                    {produtos
-                      .filter(
-                        produto =>
-                          selectedTab === 'TODOS' ||
-                          produto.categoria === selectedTab
-                      )
-                      .map(produto => (
-                        <div
-                          key={produto.id}
-                          className='border border-blue rounded-2xl p-4 mb-3 flex justify-between items-center'
-                        >
-                          <p>{produto.nome}</p>
-                          <div className='flex gap-4 '>
-                            <button className='text-brown'>
-                              <Image
-                                src='/icons/excluir.svg'
-                                alt='Excluir'
-                                className='w-5 h-5'
-                                width={20}
-                                height={20}
-                              />
-                            </button>
-                            <button className='text-blue-500'>
-                              <Image
-                                src='/icons/editar.svg'
-                                alt='Editar'
-                                className='w-5 h-5'
-                                width={20}
-                                height={20}
-                              />
-                            </button>
+                    {loadingProdutos ? (
+                      <Loading />
+                    ) : (
+                      produtos
+                        .filter(
+                          produto =>
+                            selectedTab === 'all' ||
+                            produto.metadata.tipo === selectedTab
+                        )
+                        .map(produto => (
+                          <div
+                            key={produto.id}
+                            className='border border-blue rounded-2xl p-4 mb-3 flex justify-between items-center'
+                          >
+                            <p>{produto.name}</p>
+                            <div className='flex gap-4 '>
+                              <button className='text-brown'>
+                                <Image
+                                  src='/icons/excluir.svg'
+                                  alt='Excluir'
+                                  className='w-5 h-5'
+                                  width={20}
+                                  height={20}
+                                />
+                              </button>
+                              <button
+                                className='text-blue-500'
+                                onClick={() =>
+                                  handleModalEditar(produto.id)
+                                }
+                              >
+                                <Image
+                                  src='/icons/editar.svg'
+                                  alt='Editar'
+                                  className='w-5 h-5'
+                                  width={20}
+                                  height={20}
+                                />
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                    )}
                   </div>
                 </div>
               ) : (
                 <div className='bg-white rounded-3xl shadow-lg mt-6'>
                   <div className='bg-blue p-3 rounded-t-lg'>
                     <h2 className='text-lg font-bold text-brown pl-2'>
-                      MEUS PEDIDOS
+                      MINHAS RECEITAS
                     </h2>
                   </div>
                   <div className='p-6'>
-                    {pedidos.map(pedido => (
+                    {pedidos?.map(pedido => (
                       <div
-                        key={pedido.id}
+                        key={pedido.items[0].description}
                         className='border border-blue rounded-2xl p-4 mb-3'
                       >
                         <div className='flex justify-between items-center md:flex-row flex-col gap-4'>
                           <p>
                             <span className='font-semibold'>
-                              Pedido #{pedido.id}
+                              {pedido.items[0].description}
                             </span>{' '}
-                            - Data {pedido.data}
+                            - {formatarDataBR(pedido.created_at)}
                           </p>
-                          <Button
+                          {/* <Button
                             label='Ver detalhes'
                             variant={'pink'}
-                          ></Button>
+                          ></Button> */}
                         </div>
                       </div>
                     ))}
@@ -193,7 +275,17 @@ const ContaPage = () => {
             </div>
           </div>
           {openModal && (
-            <ModalFormularioProduto closeModal={handleModal} />
+            <ModalFormularioProduto
+              closeModal={handleModal}
+              atualizarProdutos={atualizarProdutos}
+            />
+          )}
+          {openModalEditar && (
+            <ModalFormularioProduto
+              closeModal={handleModalEditar}
+              idProduct={idProduct}
+              atualizarProdutos={atualizarProdutos}
+            />
           )}
         </div>
       )}

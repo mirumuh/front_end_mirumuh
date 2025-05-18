@@ -12,13 +12,8 @@ const AmigurumisPage = () => {
   const fetchProduto = async () => {
     setIsLoading(true)
     try {
-      const response = await getProductsWithPrice()
-      const filteredProducts = response.filter(
-        product =>
-          product.metadata &&
-          product.metadata.tipo === 'amigurumi' &&
-          product.active
-      )
+      const response = await getProductsWithPrice('amigurumi')
+      const filteredProducts = response.filter(product => product.active)
       setAllProducts(filteredProducts)
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)

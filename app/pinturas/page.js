@@ -13,14 +13,11 @@ const PinturasPage = () => {
   const [filteredProducts, setFilteredProducts] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const fetchProduto = async (category = '') => {
+  const fetchProduto = async () => {
     setIsLoading(true)
     try {
-      const response = await getProductsWithPrice(category)
-      const filteredProducts = response.filter(
-        product =>
-          product.metadata && product.metadata.pintura && product.active
-      )
+      const response = await getProductsWithPrice('pintura')
+      const filteredProducts = response.filter(product => product.active)
 
       setAllProducts(filteredProducts)
     } catch (error) {
@@ -31,14 +28,21 @@ const PinturasPage = () => {
   }
 
   useEffect(() => {
-    fetchProduto(selectedCategory)
-  }, [selectedCategory])
+    fetchProduto()
+  }, [])
 
   useEffect(() => {
     if (selectedCategory) {
+      console.log(
+        'allProducts',
+        allProducts.filter(
+          produto => produto.metadata.tipoPintura === selectedCategory
+        )
+      )
+
       setFilteredProducts(
         allProducts.filter(
-          produto => produto.category === selectedCategory
+          produto => produto.metadata.tipoPintura === selectedCategory
         )
       )
     } else {
@@ -94,13 +98,21 @@ const PinturasPage = () => {
           </div>
 
           <div className='grid grid-cols-1 gap-6 px-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 '>
-            {allProducts.map((pintura, index) => (
-              <GridProducts
-                key={index}
-                product={pintura}
-                buttonLabel='Comprar'
-              />
-            ))}
+            {filteredProducts
+              ? filteredProducts.map((pintura, index) => (
+                  <GridProducts
+                    key={index}
+                    product={pintura}
+                    buttonLabel='Ver Pintura'
+                  />
+                ))
+              : allProducts.map((pintura, index) => (
+                  <GridProducts
+                    key={index}
+                    product={pintura}
+                    buttonLabel='Comprar'
+                  />
+                ))}
           </div>
         </div>
       )}
