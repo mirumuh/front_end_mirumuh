@@ -33,13 +33,6 @@ const PinturasPage = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      console.log(
-        'allProducts',
-        allProducts.filter(
-          produto => produto.metadata.tipoPintura === selectedCategory
-        )
-      )
-
       setFilteredProducts(
         allProducts.filter(
           produto => produto.metadata.tipoPintura === selectedCategory
@@ -97,22 +90,20 @@ const PinturasPage = () => {
             />
           </div>
 
-          <div className='grid grid-cols-1 gap-6 px-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 '>
-            {filteredProducts
-              ? filteredProducts.map((pintura, index) => (
-                  <GridProducts
-                    key={index}
-                    product={pintura}
-                    buttonLabel='Ver Pintura'
-                  />
-                ))
-              : allProducts.map((pintura, index) => (
-                  <GridProducts
-                    key={index}
-                    product={pintura}
-                    buttonLabel='Comprar'
-                  />
-                ))}
+          <div className='grid grid-cols-1 gap-6 px-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-5/6'>
+            {filteredProducts &&
+              filteredProducts.map((pintura, index) => (
+                <GridProducts
+                  key={index}
+                  product={pintura}
+                  pinturaAtiva={pintura.metadata.pinturaAtiva}
+                  buttonLabel={
+                    pintura.metadata.pinturaAtiva === 'true'
+                      ? 'Comprar'
+                      : 'Ver detalhes'
+                  }
+                />
+              ))}
           </div>
         </div>
       )}

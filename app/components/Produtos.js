@@ -15,7 +15,6 @@ const Produtos = ({
 }) => {
   const [selectedImage, setSelectedImage] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
-
   const [isLoading, setIsLoading] = useState(true)
 
   const renderImages = (images, size) => {
@@ -41,6 +40,7 @@ const Produtos = ({
       </div>
     ))
   }
+
   const handlePrevImage = () => {
     const newIndex =
       (currentIndex - 1 + arrayImagens.length) % arrayImagens.length
@@ -57,6 +57,7 @@ const Produtos = ({
   const handleImageLoad = () => {
     setIsLoading(false)
   }
+
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
       {/* Desktop */}

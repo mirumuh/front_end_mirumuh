@@ -8,6 +8,7 @@ import Loading from '../components/Loading'
 import getProductsWithPrice from '@/services/Products/getProducts'
 import softDeleteProduct from '@/services/Products/deleteProduct'
 import Switch from '../components/Switch'
+import editProducts from '@/services/Products/editProducts'
 
 const ContaPage = () => {
   const is_carol = process.env.NEXT_PUBLIC_IS_CAROL
@@ -58,6 +59,23 @@ const ContaPage = () => {
       const response = await getProductsWithPrice(category)
       const filteredProducts = response.filter(product => product.active)
       setProdutos(filteredProducts)
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setLoadingProdutos(false)
+    }
+  }
+
+  const updatedProducts = async (id, data) => {
+    setLoadingProdutos(true)
+    try {
+      const response = await editProducts(id, data)
+      if (response) {
+        const updatedProducts = produtos.map(produto =>
+          produto.id === id ? { ...produto, ...data } : produto
+        )
+        setProdutos(updatedProducts)
+      }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
     } finally {
@@ -155,9 +173,20 @@ const ContaPage = () => {
     return data.toLocaleDateString('pt-BR')
   }
 
-  const handleToggle = state => {
-    console.log('Switch está:', state ? 'Ligado' : 'Desligado')
+  const handleToggle = (state, id) => {
+    const produto = produtos.find(p => p.id === id)
+    const metadataAtual = produto?.metadata || {}
+
+    const data = {
+      metadata: {
+        ...metadataAtual,
+        pinturaAtiva: state ? 'true' : 'false',
+      },
+    }
+    editProducts(id, data)
   }
+
+  console.log(produtos)
 
   return (
     <>
@@ -238,7 +267,9 @@ const ContaPage = () => {
                             <div className='flex gap-4 '>
                               {produto.metadata.tipo === 'pintura' && (
                                 <Switch
-                                  onToggle={handleToggle}
+                                  onToggle={state =>
+                                    handleToggle(state, produto.id)
+                                  }
                                   value={produto.metadata.pinturaAtiva}
                                 />
                               )}

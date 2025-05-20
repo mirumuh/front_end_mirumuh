@@ -85,7 +85,7 @@ const ModalFormularioProduto = ({
         metadata: {
           tipo: tipoProduto,
           tipoPintura: tipoPintura,
-          pinturaAtiva: true,
+          pinturaAtiva: 'true',
         },
       }
 
