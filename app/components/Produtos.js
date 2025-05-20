@@ -98,11 +98,6 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {(precoProduto / 100).toFixed(2)}
               </span>
-              {/* 
-              <LanguageSwitcher
-                language={language}
-                setLanguage={setLanguage}
-              /> */}
             </div>
             <Button
               label='Encomendar'
@@ -139,10 +134,6 @@ const Produtos = ({
               <span className='font-bold text-xl font-moreSugarThin'>
                 R$ {(precoProduto / 100).toFixed(2)}
               </span>
-              {/*  <LanguageSwitcher
-                language={language}
-                setLanguage={setLanguage}
-              /> */}
             </div>
             <Button
               label='Encomendar'

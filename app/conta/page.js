@@ -6,6 +6,8 @@ import ModalFormularioProduto from '../components/ModalFormularioProduto'
 import Image from 'next/image'
 import Loading from '../components/Loading'
 import getProductsWithPrice from '@/services/Products/getProducts'
+import softDeleteProduct from '@/services/Products/deleteProduct'
+import Switch from '../components/Switch'
 
 const ContaPage = () => {
   const is_carol = process.env.NEXT_PUBLIC_IS_CAROL
@@ -63,6 +65,32 @@ const ContaPage = () => {
     }
   }
 
+  const deleteProduto = async id => {
+    setLoadingProdutos(true)
+    try {
+      const response = await softDeleteProduct(id)
+      if (response) {
+        const updatedProducts = produtos.filter(
+          produto => produto.id !== id
+        )
+        setProdutos(updatedProducts)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    } finally {
+      setLoadingProdutos(false)
+    }
+  }
+  const handleDelete = id => {
+    const confirmDelete = window.confirm(
+      'Você tem certeza que deseja excluir este produto?'
+    ) // modal delete ???
+
+    if (confirmDelete) {
+      deleteProduto(id)
+    }
+  }
+
   useEffect(() => {
     if (role === is_carol) {
       if (selectedTab === 'all') {
@@ -86,14 +114,6 @@ const ContaPage = () => {
       setPedidos(user.orders)
     }
   }, [is_carol, role, user])
-
-  console.log(user)
-
-  // const pedidos = [
-  //   { id: 1111, data: '06/02/2024', detalhes: 'teste' },
-  //   { id: 1112, data: '07/02/2024', detalhes: 'testindo' },
-  //   { id: 1113, data: '08/02/2024', detalhes: 'TESTE' },
-  // ]
 
   const handleLogout = () => {
     sessionStorage.removeItem('token')
@@ -128,12 +148,15 @@ const ContaPage = () => {
     )
   }
 
-  // Função utilitária para formatar data para o padrão brasileiro (dd/mm/yyyy)
   const formatarDataBR = dataISO => {
     if (!dataISO) return ''
     const data = new Date(dataISO)
-    if (isNaN(data)) return dataISO // fallback se não for data válida
+    if (isNaN(data)) return dataISO
     return data.toLocaleDateString('pt-BR')
+  }
+
+  const handleToggle = state => {
+    console.log('Switch está:', state ? 'Ligado' : 'Desligado')
   }
 
   return (
@@ -213,7 +236,16 @@ const ContaPage = () => {
                           >
                             <p>{produto.name}</p>
                             <div className='flex gap-4 '>
-                              <button className='text-brown'>
+                              {produto.metadata.tipo === 'pintura' && (
+                                <Switch
+                                  onToggle={handleToggle}
+                                  value={produto.metadata.pinturaAtiva}
+                                />
+                              )}
+                              <button
+                                className='text-brown'
+                                onClick={() => handleDelete(produto.id)}
+                              >
                                 <Image
                                   src='/icons/excluir.svg'
                                   alt='Excluir'

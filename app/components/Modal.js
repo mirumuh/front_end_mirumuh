@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import LanguageSwitcher from './LanguageSwitcher'
 import Button from './Button'
 import checkoutPayment from '@/services/checkout'
 import Loading from './Loading'
@@ -48,7 +47,7 @@ const Modal = ({ produto, closeModal }) => {
 
   const isReceita = produto.metadata.tipo === 'receita'
   const isPintura = produto.metadata.tipo === 'pinturas'
-  
+
   const mensagem = encodeURIComponent(
     `Olá, me interessei por ${produto?.name} no valor de R$ ${(
       produto?.prices[0]?.amount / 100
