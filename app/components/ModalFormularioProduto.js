@@ -8,21 +8,15 @@ import SelectComponent from './SelectComponent'
 import PdfUploader from './PdfUploader'
 import saveProducts from '@/services/Products/saveProducts'
 import uploadPdfReceita from '@/services/uploadPdf'
-import GoogleDrivePicker from './ImageUploader'
-import Image from 'next/image'
-import { CldUploadWidget } from 'next-cloudinary'
 import getProductsById from '@/services/Products/getProductsById'
 import editProducts from '@/services/Products/editProducts'
 
-const ModalFormularioProduto = ({
-  closeModal,
-  idProduct,
-  atualizarProdutos,
-}) => {
+const ModalFormularioProduto = ({ closeModal, idProduct, atualizarProdutos }) => {
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
-  const [imagens, setImagens] = useState()
+  const [imagens, setImagens] = useState([])
+  const [imageFiles, setImageFiles] = useState([])
   const [pdf, setPdf] = useState(null)
   const [tipoPintura, setTipoPintura] = useState('')
   const [idioma, setIdioma] = useState('')
@@ -36,69 +30,59 @@ const ModalFormularioProduto = ({
     const numericPrice = parseFloat(cleaned)
     return isNaN(numericPrice) ? 0 : Math.round(numericPrice * 100)
   }
-  console.log(idProduct)
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files)
+    setImageFiles(files.slice(0, 8))
+  }
+
+  const handleImageUpload = async () => {
+    const formData = new FormData()
+    imageFiles.forEach((file) => {
+      formData.append('images', file)
+    })
+
+    try {
+      const res = await fetch('http://localhost:8080/upload-images', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await res.json()
+      if (data.paths) {
+        setImagens(data.paths)
+      }
+    } catch (error) {
+      console.error('Erro ao enviar imagens:', error)
+      alert('Erro ao enviar imagens')
+    }
+  }
 
   const saveProduct = async e => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const receitaData = {
+      const baseData = {
         active: true,
         name: titulo,
         description: descricao,
         price: formatPrice(preco),
         currency: 'brl',
-        images: imagens ?? [
-          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
-        ],
-        metadata: {
-          tipo: tipoProduto,
-          idioma: idioma,
-        },
+        images: imagens,
+        metadata: {},
       }
-
-      const amigurumiData = {
-        active: true,
-        name: titulo,
-        description: descricao,
-        price: formatPrice(preco),
-        currency: 'brl',
-        images: imagens ?? [
-          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
-        ],
-        metadata: {
-          tipo: tipoProduto,
-          quantidade: 1,
-        },
-      }
-
-      const pinturaData = {
-        active: true,
-        name: titulo,
-        description: descricao,
-        price: formatPrice(preco),
-        currency: 'brl',
-        images: imagens ?? [
-          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
-        ],
-        metadata: {
-          tipo: tipoProduto,
-          tipoPintura: tipoPintura,
-        },
-      }
-
-      let data = {}
 
       if (tipoProduto === 'receita') {
-        data = receitaData
+        baseData.metadata = { tipo: tipoProduto, idioma }
       } else if (tipoProduto === 'amigurumi') {
-        data = amigurumiData
+        baseData.metadata = { tipo: tipoProduto, quantidade: 
+        '1' }
       } else if (tipoProduto === 'pintura') {
-        data = pinturaData
+        baseData.metadata = { tipo: tipoProduto, tipoPintura }
       }
 
-      const response = await saveProducts(data)
+      const response = await saveProducts(baseData)
 
       if (tipoProduto === 'receita' && pdf) {
         await uploadPdfReceita(pdf)
@@ -125,14 +109,12 @@ const ModalFormularioProduto = ({
         description: descricao,
         price: formatPrice(preco),
         currency: 'brl',
-        images: imagens ?? [
-          'https://res.cloudinary.com/djtmwpq1g/image/upload/v1746314544/gsxqbrvxrr89fdopqzth.png',
-        ],
+        images: imagens,
         metadata: {
           tipo: tipoProduto,
-          idioma: idioma,
-          tipoPintura: tipoPintura,
-          pdf: pdf,
+          idioma,
+          tipoPintura,
+          pdf,
         },
       })
 
@@ -159,12 +141,10 @@ const ModalFormularioProduto = ({
         ]}
         label={'Idioma'}
       />
-      <PdfUploader
-        label={'PDF do Produto'}
-        onPdfUpload={file => setPdf(file)}
-      />
+      <PdfUploader label={'PDF do Produto'} onPdfUpload={file => setPdf(file)} />
     </>
   )
+
   const pinturaForm = (
     <SelectComponent
       value={tipoPintura}
@@ -178,22 +158,10 @@ const ModalFormularioProduto = ({
     />
   )
 
-  const handleUpload = result => {
-    if (result?.info?.secure_url) {
-      setImagens(prev => {
-        // impede mais de 8 imagens
-        if (prev.length >= 8) return prev
-        return [...prev, result.info.secure_url]
-      })
-    }
-  }
-
   const fetchProdutoById = async id => {
     setLoadingProdutos(true)
     try {
       const response = await getProductsById(id)
-      console.log(response)
-
       setTitulo(response.name)
       setDescricao(response.description)
       setPreco(
@@ -242,68 +210,19 @@ const ModalFormularioProduto = ({
               className='flex flex-col gap-4 '
               onClick={e => e.stopPropagation()}
             >
-              <InputComponent
-                value={titulo}
-                setValue={setTitulo}
-                type={'text'}
-                placeholder={'Digite o título do produto'}
-                label={'Título'}
-              />
-              <InputComponent
-                value={descricao}
-                setValue={setDescricao}
-                type={'text'}
-                placeholder={'Digite a descrição do produto'}
-                label={'Descrição'}
-              />
-              <InputComponent
-                value={preco}
-                setValue={setPreco}
-                type={'preco'}
-                placeholder={'Digite o preço do produto'}
-                label={'Preço'}
-              />
-              {/* <ImageUploader
-                label={'Imagem do Produto'}
-                onImageUpload={file => setImages(file)}
-              /> */}{' '}
-              {/* <GoogleDrivePicker setImages={setImagens} /> */}
-              <CldUploadWidget
-                signatureEndpoint='/services/uploadImages'
-                options={{
-                  maxFiles: 8,
-                  multiple: true,
-                  sources: ['local', 'camera', 'url'],
-                  resourceType: 'image',
-                }}
-                uploadPreset='ml_default'
-              >
-                {({ open }) => {
-                  return (
-                    <button
-                      onClick={() => {
-                        const result = open()
-                        if (result?.length) {
-                          const urls = result
-                            .map(r => r?.secure_url)
-                            .filter(Boolean)
-                            .slice(0, 8 - imageUrls.length)
-
-                          setImagens(prev => [...prev, ...urls])
-                        }
-                      }}
-                      type='button'
-                      className='bg-blue-500 px-4 py-2 rounded'
-                    >
-                      Selecionar Imagens
-                    </button>
-                  )
-                }}
-              </CldUploadWidget>
-              {imagens &&
-                imagens?.map((img, index) => (
-                  <span key={index}>{img}</span>
+              <InputComponent value={titulo} setValue={setTitulo} type='text' placeholder='Digite o título do produto' label='Título' />
+              <InputComponent value={descricao} setValue={setDescricao} type='text' placeholder='Digite a descrição do produto' label='Descrição' />
+              <InputComponent value={preco} setValue={setPreco} type='preco' placeholder='Digite o preço do produto' label='Preço' />
+              <div>
+                <label className='font-medium'>Imagens</label>
+                <input type='file' multiple accept='image/*' onChange={handleFileSelect} className='mb-2' />
+                <button type='button' onClick={handleImageUpload} className='bg-green-600 text-white px-3 py-1 rounded'>
+                  Enviar imagens
+                </button>
+                {imagens && imagens.map((img, idx) => (
+                  <div key={idx} className='text-sm text-gray-600 truncate'>{img}</div>
                 ))}
+              </div>
               <SelectComponent
                 value={tipoProduto}
                 setValue={setTipoProduto}
@@ -312,16 +231,12 @@ const ModalFormularioProduto = ({
                   { value: 'pintura', label: 'Pintura' },
                   { value: 'receita', label: 'Receita' },
                 ]}
-                label={'Tipo de Produto'}
+                label='Tipo de Produto'
               />
               {tipoProduto === 'receita' && receitaForm}
               {tipoProduto === 'pintura' && pinturaForm}
               <div className='flex justify-end'>
-                <Button
-                  variant={'brown'}
-                  type={'submit'}
-                  label={'Salvar'}
-                />
+                <Button variant='brown' type='submit' label='Salvar' />
               </div>
             </form>
           </div>
