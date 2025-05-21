@@ -69,7 +69,7 @@ const ModalFormularioProduto = ({
         ],
         metadata: {
           tipo: tipoProduto,
-          quantidade: 1,
+          quantidade: '1',
         },
       }
 

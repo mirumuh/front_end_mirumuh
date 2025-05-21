@@ -9,6 +9,7 @@ import getProductsWithPrice from '@/services/Products/getProducts'
 import softDeleteProduct from '@/services/Products/deleteProduct'
 import Switch from '../components/Switch'
 import editProducts from '@/services/Products/editProducts'
+import NumberControl from '../components/NumberControl'
 
 const ContaPage = () => {
   const is_carol = process.env.NEXT_PUBLIC_IS_CAROL
@@ -23,6 +24,7 @@ const ContaPage = () => {
   const [pedidos, setPedidos] = useState([])
   const [produtos, setProdutos] = useState([])
   const [idProduct, setIdProduct] = useState('')
+  const [number, setNumber] = useState(1)
 
   const handleModal = () => {
     setOpenModal(!openModal)
@@ -186,6 +188,30 @@ const ContaPage = () => {
     editProducts(id, data)
   }
 
+  const handleNumber = async (id, value) => {
+    const produto = produtos.find(p => p.id === id)
+    const metadataAtual = produto?.metadata || {}
+
+    const data = {
+      metadata: {
+        ...metadataAtual,
+        quantidade: String(value),
+      },
+    }
+
+    try {
+      const response = await editProducts(id, data)
+      if (response) {
+        const updatedProducts = produtos.map(produto =>
+          produto.id === id ? { ...produto, ...data } : produto
+        )
+        setProdutos(updatedProducts)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
+    }
+  }
+
   console.log(produtos)
 
   return (
@@ -265,13 +291,25 @@ const ContaPage = () => {
                           >
                             <p>{produto.name}</p>
                             <div className='flex gap-4 '>
-                              {produto.metadata.tipo === 'pintura' && (
+                              {produto.metadata.tipo === 'pintura' ? (
                                 <Switch
                                   onToggle={state =>
                                     handleToggle(state, produto.id)
                                   }
                                   value={produto.metadata.pinturaAtiva}
                                 />
+                              ) : (
+                                produto.metadata.tipo === 'amigurumi' && (
+                                  <NumberControl
+                                    value={Number(
+                                      produto.metadata.quantidade
+                                    )}
+                                    onChange={value =>
+                                      handleNumber(produto.id, value)
+                                    }
+                                    min={0}
+                                  />
+                                )
                               )}
                               <button
                                 className='text-brown'
@@ -325,10 +363,6 @@ const ContaPage = () => {
                             </span>{' '}
                             - {formatarDataBR(pedido.created_at)}
                           </p>
-                          {/* <Button
-                            label='Ver detalhes'
-                            variant={'pink'}
-                          ></Button> */}
                         </div>
                       </div>
                     ))}

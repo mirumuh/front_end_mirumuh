@@ -33,6 +33,7 @@ const ProdutoPage = () => {
           nomeProduto={produto?.name}
           descricaoProduto={produto?.description}
           precoProduto={produto?.prices[0].amount}
+          metadata={produto?.metadata}
           onClickBuy={onClickBuy}
           arrayImagens={produto?.images}
         />

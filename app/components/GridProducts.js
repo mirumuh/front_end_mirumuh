@@ -4,29 +4,24 @@ import Link from 'next/link'
 const GridProducts = ({ product, buttonLabel, pinturaAtiva }) => {
   return (
     <div className='flex flex-col gap-4 bg-white rounded-3xl shadow-lg p-10 items-center'>
-      <div className='flex items-center justify-center border rounded-2xl w-full p-1 sm:h-56 overflow-hidden'>
+      <div className='flex items-center justify-center border rounded-2xl w-full p-1 h-56 overflow-hidden relative'>
         <Image
           src={product?.images[0] || '/icons/logo_marcado.png'}
           alt='Imagens'
-          width={100}
-          height={100}
-          style={
-            product?.images[0]
-              ? {
-                  transform: 'scale(2)',
-                  objectFit: 'fill',
-                  transformOrigin: 'center 50% 20px',
-                }
-              : {}
-          }
+          fill
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+          }}
+          className='rounded-2xl'
         />
       </div>
 
       <div className='flex flex-col gap-2 items-center'>
-        <h2 className=' text-lg text-light-brown '>
-          {product?.name || 'Teste product'}{' '}
+        <h2 className=' text-lg text-light-brown text-center'>
+          {product?.name || 'Teste product'}
         </h2>
-        {pinturaAtiva == 'true' ? (
+        {product.metadata.tipo !== 'pintura' || pinturaAtiva == 'true' ? (
           <p className='font-semibold'>
             R$ {(product?.prices[0].amount / 100).toFixed(2)}
           </p>
