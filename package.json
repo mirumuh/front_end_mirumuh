@@ -11,6 +11,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^5.7.0",
     "axios": "^1.7.9",
+    "browser-image-compression": "^2.0.2",
     "next": "15.0.3",
     "next-cloudinary": "^6.16.0",
     "react": "19.0.0-rc-66855b96-20241106",

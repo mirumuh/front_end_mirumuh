@@ -6,20 +6,18 @@ import React, { Fragment, useEffect, useState } from 'react'
 
 const Navbar = ({ isOpen, closeMenu }) => {
   const [logado, setLogado] = useState(false)
-  const token = sessionStorage.getItem('token')
   const router = usePathname()
 
-  const verifyLogin = token => {
-    if (token !== null) {
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+
+    if (token) {
       setLogado(true)
     } else {
       setLogado(false)
     }
-  }
 
-  useEffect(() => {
-    verifyLogin(token)
-  }, [token])
+  }, [])
 
   const navItems = [
     { label: 'Home', path: '/', disabled: false },
@@ -31,9 +29,10 @@ const Navbar = ({ isOpen, closeMenu }) => {
     { label: 'Conta', path: '/conta', disabled: !logado },
   ]
 
-  const handleLinkClick = path => {
-    window.location.href = path
-    closeMenu()
+  const handleLinkClick = () => {
+    if (isOpen) {
+      closeMenu()
+    }
   }
 
   return (
@@ -51,9 +50,7 @@ const Navbar = ({ isOpen, closeMenu }) => {
                 className={`p-2 hover:bg-bege rounded-2xl text-center ${
                   item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
                 } ${router === item.path ? 'bg-bege' : ''}`}
-                onClick={() => {
-                  handleLinkClick(item.path)
-                }}
+                onClick={handleLinkClick}
               >
                 {item.label}
               </Link>

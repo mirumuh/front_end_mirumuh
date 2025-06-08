@@ -6,6 +6,7 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       'files.stripe.com',
       'drive.google.com',
+      'localhost'
     ],
   },
 
