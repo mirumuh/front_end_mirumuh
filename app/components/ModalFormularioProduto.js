@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import imageCompression from 'browser-image-compression'; 
+import imageCompression from 'browser-image-compression';
 
 import Button from './Button'
 import Loading from './Loading'
@@ -23,7 +23,7 @@ const ModalFormularioProduto = ({
   const [tipoPintura, setTipoPintura] = useState('');
   const [idioma, setIdioma] = useState('');
   const [tipoProduto, setTipoProduto] = useState('');
-  
+
 
   const [arquivosParaUpload, setArquivosParaUpload] = useState([]);
   const [imagensExistentes, setImagensExistentes] = useState([]);
@@ -41,9 +41,9 @@ const ModalFormularioProduto = ({
   const handleFileSelection = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 8) {
-        alert('Você pode selecionar no máximo 8 imagens.');
-        setArquivosParaUpload([]);
-        return;
+      alert('Você pode selecionar no máximo 8 imagens.');
+      setArquivosParaUpload([]);
+      return;
     }
     setArquivosParaUpload(files);
   };
@@ -52,9 +52,9 @@ const ModalFormularioProduto = ({
     e.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData();
-
     try {
+      const formData = new FormData();
+
       if (arquivosParaUpload.length > 0) {
         const options = {
           maxSizeMB: 1,
@@ -62,37 +62,30 @@ const ModalFormularioProduto = ({
           useWebWorker: true,
           fileType: 'image/webp',
         };
-
         const compressedFiles = await Promise.all(
           arquivosParaUpload.map(file => imageCompression(file, options))
         );
-
         compressedFiles.forEach((webpFile) => {
-          formData.append('imagens', webpFile);
+          formData.append('imagens', webpFile, `imagem_${Date.now()}.webp`);
         });
       }
 
       formData.append('name', titulo);
       formData.append('description', descricao);
-      formData.append('price', formatPrice(preco));
       formData.append('tipo', tipoProduto);
-      
-      if(tipoProduto === 'receita') {
-        formData.append('idioma', idioma);
-      }
-      if(tipoProduto === 'pintura') {
-        formData.append('tipoPintura', tipoPintura);
-      }
-      
+      formData.append('price', formatPrice(preco));
+      if (tipoProduto === 'receita') formData.append('idioma', idioma);
+      if (tipoProduto === 'pintura') formData.append('tipoPintura', tipoPintura);
+
       const isEditing = !!idProduct;
+      const method = isEditing ? 'PATCH' : 'POST';
       const endpoint = isEditing ? `http://localhost:8080/product/${idProduct}` : 'http://localhost:8080/product';
-      const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(endpoint, {
         method: method,
         body: formData,
       });
-      
+
       const result = await response.json();
 
       if (response.ok) {
@@ -100,7 +93,7 @@ const ModalFormularioProduto = ({
         atualizarProdutos && atualizarProdutos();
         closeModal();
       } else {
-        throw new Error(result.message || `Erro ao ${isEditing ? 'editar' : 'salvar'} produto!`);
+        throw new Error(result.error || `Erro ao ${isEditing ? 'editar' : 'salvar'} produto!`);
       }
 
     } catch (error) {
@@ -129,8 +122,8 @@ const ModalFormularioProduto = ({
       setIdioma(response.metadata?.idioma || '');
       setPdf(response.metadata?.pdf || null);
     } catch (error) {
-      console.error('Erro ao buscar produto:', error);
-      alert('Não foi possível carregar os dados do produto.');
+      console.error('Erro detalhado ao buscar produto:', error.response || error);
+      alert('Não foi possível carregar os dados do produto. Verifique o console do navegador para mais detalhes.');
     } finally {
       setLoadingProdutos(false);
     }
@@ -182,10 +175,10 @@ const ModalFormularioProduto = ({
               <InputComponent value={titulo} setValue={setTitulo} type={'text'} placeholder={'Digite o título do produto'} label={'Título'} />
               <InputComponent value={descricao} setValue={setDescricao} type={'text'} placeholder={'Digite a descrição do produto'} label={'Descrição'} />
               <InputComponent value={preco} setValue={setPreco} type={'preco'} placeholder={'Digite o preço do produto'} label={'Preço'} />
-              
+
               <div className='flex flex-col gap-2'>
                 <label className='font-semibold text-dark-purple'>
-                  Imagens do Produto (Novas)
+                  Imagens do Produto
                   <span className='text-sm font-normal text-gray-500'> (máx 8)</span>
                 </label>
                 <input
@@ -205,7 +198,7 @@ const ModalFormularioProduto = ({
                   <label className='font-semibold text-dark-purple'>Imagens Atuais</label>
                   <div className='flex flex-wrap gap-2 p-2 border rounded-md'>
                     {imagensExistentes.map((imgUrl) => (
-                      <img key={imgUrl} src={imgUrl} alt="Imagem existente" className='h-20 w-20 object-cover rounded'/>
+                      <img key={imgUrl} src={imgUrl} alt="Imagem existente" className='h-20 w-20 object-cover rounded' />
                     ))}
                   </div>
                 </div>

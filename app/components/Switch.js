@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+'use client'
+
+import React from 'react';
 
 const Switch = ({ onToggle, value }) => {
-  const [enabled, setEnabled] = useState(value)
+  const isEnabled = value === true;
 
   const toggle = () => {
-    const newState = !enabled
-    setEnabled(newState)
-    onToggle?.(newState)
-  }
+    onToggle?.(!isEnabled);
+  };
 
   return (
     <div className='flex items-center gap-3'>
@@ -15,17 +15,17 @@ const Switch = ({ onToggle, value }) => {
       <button
         onClick={toggle}
         className={`w-12 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-          enabled ? 'bg-secondary' : 'bg-primary bg-opacity-40'
+          isEnabled ? 'bg-secondary' : 'bg-primary bg-opacity-40'
         }`}
       >
         <div
           className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-            enabled ? 'translate-x-5' : 'translate-x-0'
+            isEnabled ? 'translate-x-5' : 'translate-x-0'
           }`}
         />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default Switch
+export default Switch;

@@ -24,7 +24,6 @@ const ContaPage = () => {
   const [pedidos, setPedidos] = useState([])
   const [produtos, setProdutos] = useState([])
   const [idProduct, setIdProduct] = useState('')
-  const [number, setNumber] = useState(1)
 
   const handleModal = () => {
     setOpenModal(!openModal)
@@ -68,23 +67,6 @@ const ContaPage = () => {
     }
   }
 
-  const updatedProducts = async (id, data) => {
-    setLoadingProdutos(true)
-    try {
-      const response = await editProducts(id, data)
-      if (response) {
-        const updatedProducts = produtos.map(produto =>
-          produto.id === id ? { ...produto, ...data } : produto
-        )
-        setProdutos(updatedProducts)
-      }
-    } catch (error) {
-      console.error('Erro ao buscar produtos:', error)
-    } finally {
-      setLoadingProdutos(false)
-    }
-  }
-
   const deleteProduto = async id => {
     setLoadingProdutos(true)
     try {
@@ -97,14 +79,15 @@ const ContaPage = () => {
       }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
-    } finally {
+    }
+    finally {
       setLoadingProdutos(false)
     }
   }
   const handleDelete = id => {
     const confirmDelete = window.confirm(
       'Você tem certeza que deseja excluir este produto?'
-    ) // modal delete ???
+    )
 
     if (confirmDelete) {
       deleteProduto(id)
@@ -175,44 +158,71 @@ const ContaPage = () => {
     return data.toLocaleDateString('pt-BR')
   }
 
-  const handleToggle = (state, id) => {
-    const produto = produtos.find(p => p.id === id)
-    const metadataAtual = produto?.metadata || {}
+  // --- FUNÇÃO CORRIGIDA ---
+  const handleToggle = async (state, id) => {
+    const produto = produtos.find(p => p.id === id);
+    if (!produto) return;
 
-    const data = {
-      metadata: {
-        ...metadataAtual,
-        pinturaAtiva: state ? 'true' : 'false',
-      },
-    }
-    editProducts(id, data)
-  }
+    // 1. Cria o objeto de metadados final
+    const newMetadata = {
+      ...produto.metadata,
+      pinturaAtiva: state ? 'true' : 'false',
+    };
 
-  const handleNumber = async (id, value) => {
-    const produto = produtos.find(p => p.id === id)
-    const metadataAtual = produto?.metadata || {}
+    const formData = new FormData();
 
-    const data = {
-      metadata: {
-        ...metadataAtual,
-        quantidade: String(value),
-      },
-    }
+    // 2. Itera sobre o objeto final e adiciona ao FormData.
+    // Isso garante que cada chave seja adicionada apenas uma vez.
+    Object.keys(newMetadata).forEach(key => {
+        formData.append(`metadata[${key}]`, newMetadata[key]);
+    });
 
     try {
-      const response = await editProducts(id, data)
+        const response = await editProducts(id, formData);
+        
+        if (response) {
+            const updatedProducts = produtos.map(p =>
+              p.id === id ? { ...p, metadata: newMetadata } : p
+            );
+            setProdutos(updatedProducts);
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar o toggle:', error);
+        alert('Não foi possível atualizar o status do produto.');
+    }
+  };
+
+  // --- FUNÇÃO CORRIGIDA ---
+  const handleNumber = async (id, value) => {
+    const produto = produtos.find(p => p.id === id);
+    if (!produto) return;
+
+    // 1. Cria o objeto de metadados final
+    const newMetadata = {
+      ...produto.metadata,
+      quantidade: String(value),
+    };
+
+    const formData = new FormData();
+
+    // 2. Itera sobre o objeto final para garantir que não haja chaves duplicadas
+    Object.keys(newMetadata).forEach(key => {
+        formData.append(`metadata[${key}]`, newMetadata[key]);
+    });
+
+    try {
+      const response = await editProducts(id, formData);
       if (response) {
-        const updatedProducts = produtos.map(produto =>
-          produto.id === id ? { ...produto, ...data } : produto
-        )
-        setProdutos(updatedProducts)
+        const updatedProducts = produtos.map(p =>
+          p.id === id ? { ...p, metadata: newMetadata } : p
+        );
+        setProdutos(updatedProducts);
       }
     } catch (error) {
-      console.error('Erro ao buscar produtos:', error)
+      console.error('Erro ao atualizar a quantidade:', error);
+      alert('Não foi possível atualizar a quantidade.');
     }
-  }
-
-  console.log(produtos)
+  };
 
   return (
     <>
@@ -254,15 +264,14 @@ const ContaPage = () => {
                     </h2>
                   </div>
                   <div className='p-6'>
-                    <div className='flex gap-4 mb-4'>
+                    <div className='flex gap-4 mb-4 overflow-x-auto'>
                       {categories.map(tab => (
                         <button
                           key={tab.value}
-                          className={`px-4 py-2 rounded relative ${
-                            selectedTab === tab.value
+                          className={`px-4 py-2 rounded relative whitespace-nowrap ${selectedTab === tab.value
                               ? 'border-b-4 border-blue'
                               : 'bg-white'
-                          }`}
+                            }`}
                           onClick={() => setSelectedTab(tab.value)}
                         >
                           {tab.name}
@@ -289,26 +298,30 @@ const ContaPage = () => {
                             key={produto.id}
                             className='border border-blue rounded-2xl p-4 mb-3 flex justify-between items-center'
                           >
-                            <p>{produto.name}</p>
-                            <div className='flex gap-4 '>
+                            <p className='truncate pr-2'>{produto.name}</p>
+                            <div className='flex gap-4 items-center flex-shrink-0'>
                               {produto.metadata.tipo === 'pintura' ? (
                                 <Switch
                                   onToggle={state =>
                                     handleToggle(state, produto.id)
                                   }
-                                  value={produto.metadata.pinturaAtiva}
+                                  value={produto.metadata.pinturaAtiva === 'true'}
                                 />
                               ) : (
                                 produto.metadata.tipo === 'amigurumi' && (
-                                  <NumberControl
-                                    value={Number(
-                                      produto.metadata.quantidade
-                                    )}
-                                    onChange={value =>
-                                      handleNumber(produto.id, value)
-                                    }
-                                    min={0}
-                                  />
+                                  (() => {
+                                    const quantidadeSegura = Number(produto.metadata.quantidade) || 0;
+
+                                    return (
+                                      <NumberControl
+                                        value={quantidadeSegura}
+                                        onChange={value =>
+                                          handleNumber(produto.id, value)
+                                        }
+                                        min={0}
+                                      />
+                                    );
+                                  })()
                                 )
                               )}
                               <button

@@ -1,12 +1,17 @@
-import { api } from '../api'
+import { api } from '../api';
 
-export default async function editProducts(id, data) {
+export default async function editProducts(id, dataToUpdate) {
+  if (!id || !dataToUpdate) {
+    throw new Error('ID do produto e dados para atualização são necessários.');
+  }
+
   try {
-    const { data: response } = await api.patch(`/product/${id}`, data)
+    const { data: responseData } = await api.patch(`/product/${id}`, dataToUpdate);
+    
+    return responseData;
 
-    return response || []
   } catch (error) {
-    console.error('Erro ao buscar perfil:', error)
-    throw error
+    console.error('Erro no serviço editProducts:', error.response?.data || error.message);
+    throw error;
   }
 }
