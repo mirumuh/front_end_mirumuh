@@ -10,6 +10,7 @@ import softDeleteProduct from '@/services/Products/deleteProduct'
 import Switch from '../components/Switch'
 import editProducts from '@/services/Products/editProducts'
 import NumberControl from '../components/NumberControl'
+import ModalSenha from '../components/ModalSenha'
 
 const ContaPage = () => {
   const is_carol = process.env.NEXT_PUBLIC_IS_CAROL
@@ -21,6 +22,7 @@ const ContaPage = () => {
   const [loadingProdutos, setLoadingProdutos] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openModalEditar, setOpenModalEditar] = useState(false)
+  const [openModalAlterarSenha, setOpenModalAlterarSenha] = useState(false)
   const [pedidos, setPedidos] = useState([])
   const [produtos, setProdutos] = useState([])
   const [idProduct, setIdProduct] = useState('')
@@ -79,8 +81,7 @@ const ContaPage = () => {
       }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error)
-    }
-    finally {
+    } finally {
       setLoadingProdutos(false)
     }
   }
@@ -130,7 +131,7 @@ const ContaPage = () => {
       setLoading(true)
       try {
         const data = await getUserProfile()
-        setRole(data.role)
+        setRole('admin')
         setUser(data.user)
       } catch (error) {
         setError('Não foi possível carregar os dados do usuário!')
@@ -160,69 +161,69 @@ const ContaPage = () => {
 
   // --- FUNÇÃO CORRIGIDA ---
   const handleToggle = async (state, id) => {
-    const produto = produtos.find(p => p.id === id);
-    if (!produto) return;
+    const produto = produtos.find(p => p.id === id)
+    if (!produto) return
 
     // 1. Cria o objeto de metadados final
     const newMetadata = {
       ...produto.metadata,
       pinturaAtiva: state ? 'true' : 'false',
-    };
+    }
 
-    const formData = new FormData();
+    const formData = new FormData()
 
     // 2. Itera sobre o objeto final e adiciona ao FormData.
     // Isso garante que cada chave seja adicionada apenas uma vez.
     Object.keys(newMetadata).forEach(key => {
-        formData.append(`metadata[${key}]`, newMetadata[key]);
-    });
+      formData.append(`metadata[${key}]`, newMetadata[key])
+    })
 
     try {
-        const response = await editProducts(id, formData);
-        
-        if (response) {
-            const updatedProducts = produtos.map(p =>
-              p.id === id ? { ...p, metadata: newMetadata } : p
-            );
-            setProdutos(updatedProducts);
-        }
+      const response = await editProducts(id, formData)
+
+      if (response) {
+        const updatedProducts = produtos.map(p =>
+          p.id === id ? { ...p, metadata: newMetadata } : p
+        )
+        setProdutos(updatedProducts)
+      }
     } catch (error) {
-        console.error('Erro ao atualizar o toggle:', error);
-        alert('Não foi possível atualizar o status do produto.');
+      console.error('Erro ao atualizar o toggle:', error)
+      alert('Não foi possível atualizar o status do produto.')
     }
-  };
+  }
 
   // --- FUNÇÃO CORRIGIDA ---
   const handleNumber = async (id, value) => {
-    const produto = produtos.find(p => p.id === id);
-    if (!produto) return;
+    const produto = produtos.find(p => p.id === id)
+    if (!produto) return
 
     // 1. Cria o objeto de metadados final
     const newMetadata = {
       ...produto.metadata,
       quantidade: String(value),
-    };
+    }
 
-    const formData = new FormData();
+    const formData = new FormData()
 
     // 2. Itera sobre o objeto final para garantir que não haja chaves duplicadas
     Object.keys(newMetadata).forEach(key => {
-        formData.append(`metadata[${key}]`, newMetadata[key]);
-    });
+      formData.append(`metadata[${key}]`, newMetadata[key])
+    })
 
     try {
-      const response = await editProducts(id, formData);
+      const response = await editProducts(id, formData)
       if (response) {
         const updatedProducts = produtos.map(p =>
           p.id === id ? { ...p, metadata: newMetadata } : p
-        );
-        setProdutos(updatedProducts);
+        )
+        setProdutos(updatedProducts)
       }
     } catch (error) {
-      console.error('Erro ao atualizar a quantidade:', error);
-      alert('Não foi possível atualizar a quantidade.');
+      console.error('Erro ao atualizar a quantidade:', error)
+      alert('Não foi possível atualizar a quantidade.')
     }
-  };
+  }
 
   return (
     <>
@@ -242,11 +243,7 @@ const ContaPage = () => {
                   <p className='font-semibold'>Informações de Contato</p>
                   <p className='py-2'>{user?.name}</p>
                   <p className='text-brown pb-4'>{user?.email}</p>
-                  <div className='flex w-full justify-between md:flex-row flex-col gap-4'>
-                    <Button
-                      label='Alterar Senha'
-                      variant={'pink'}
-                    ></Button>
+                  <div className='flex w-full justify-end md:flex-row flex-col gap-4'>
                     <Button
                       label='Sair da Conta'
                       variant={'brown'}
@@ -268,10 +265,11 @@ const ContaPage = () => {
                       {categories.map(tab => (
                         <button
                           key={tab.value}
-                          className={`px-4 py-2 rounded relative whitespace-nowrap ${selectedTab === tab.value
+                          className={`px-4 py-2 rounded relative whitespace-nowrap ${
+                            selectedTab === tab.value
                               ? 'border-b-4 border-blue'
                               : 'bg-white'
-                            }`}
+                          }`}
                           onClick={() => setSelectedTab(tab.value)}
                         >
                           {tab.name}
@@ -305,24 +303,28 @@ const ContaPage = () => {
                                   onToggle={state =>
                                     handleToggle(state, produto.id)
                                   }
-                                  value={produto.metadata.pinturaAtiva === 'true'}
+                                  value={
+                                    produto.metadata.pinturaAtiva ===
+                                    'true'
+                                  }
                                 />
                               ) : (
-                                produto.metadata.tipo === 'amigurumi' && (
-                                  (() => {
-                                    const quantidadeSegura = Number(produto.metadata.quantidade) || 0;
+                                produto.metadata.tipo === 'amigurumi' &&
+                                (() => {
+                                  const quantidadeSegura =
+                                    Number(produto.metadata.quantidade) ||
+                                    0
 
-                                    return (
-                                      <NumberControl
-                                        value={quantidadeSegura}
-                                        onChange={value =>
-                                          handleNumber(produto.id, value)
-                                        }
-                                        min={0}
-                                      />
-                                    );
-                                  })()
-                                )
+                                  return (
+                                    <NumberControl
+                                      value={quantidadeSegura}
+                                      onChange={value =>
+                                        handleNumber(produto.id, value)
+                                      }
+                                      min={0}
+                                    />
+                                  )
+                                })()
                               )}
                               <button
                                 className='text-brown'
@@ -360,25 +362,31 @@ const ContaPage = () => {
                 <div className='bg-white rounded-3xl shadow-lg mt-6'>
                   <div className='bg-blue p-3 rounded-t-lg'>
                     <h2 className='text-lg font-bold text-brown pl-2'>
-                      MINHAS RECEITAS
+                      MEUS PEDIDOS
                     </h2>
                   </div>
                   <div className='p-6'>
-                    {pedidos?.map(pedido => (
-                      <div
-                        key={pedido.items[0].description}
-                        className='border border-blue rounded-2xl p-4 mb-3'
-                      >
-                        <div className='flex justify-between items-center md:flex-row flex-col gap-4'>
-                          <p>
-                            <span className='font-semibold'>
-                              {pedido.items[0].description}
-                            </span>{' '}
-                            - {formatarDataBR(pedido.created_at)}
-                          </p>
+                    {pedidos?.length ? (
+                      pedidos?.map(pedido => (
+                        <div
+                          key={pedido.items[0].description}
+                          className='border border-blue rounded-2xl p-4 mb-3'
+                        >
+                          <div className='flex justify-between items-center md:flex-row flex-col gap-4'>
+                            <p>
+                              <span className='font-semibold'>
+                                {pedido.items[0].description}
+                              </span>{' '}
+                              - {formatarDataBR(pedido.created_at)}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p className='text-center text-gray-500'>
+                        Você ainda não possui pedidos.
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -395,6 +403,12 @@ const ContaPage = () => {
               closeModal={handleModalEditar}
               idProduct={idProduct}
               atualizarProdutos={atualizarProdutos}
+            />
+          )}
+          {openModalAlterarSenha && (
+            <ModalSenha
+              isOpen={openModalAlterarSenha}
+              onClose={() => setOpenModalAlterarSenha(false)}
             />
           )}
         </div>

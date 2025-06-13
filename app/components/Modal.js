@@ -22,8 +22,6 @@ const Modal = ({ produto, closeModal }) => {
     return encode(`${formattedName}.pdf`)
   }
 
-  console.log(pdfName(produto.name))
-
   const checkout = async e => {
     e.preventDefault()
     setIsLoading(true)
