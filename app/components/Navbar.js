@@ -1,17 +1,39 @@
 'use client'
-import Image from 'next/image'
+
 import Link from 'next/link'
-import React, { Fragment } from 'react'
+import { usePathname } from 'next/navigation'
+import React, { Fragment, useEffect, useState } from 'react'
 
 const Navbar = ({ isOpen, closeMenu }) => {
+  const [logado, setLogado] = useState(false)
+  const router = usePathname()
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+
+    if (token) {
+      setLogado(true)
+    } else {
+      setLogado(false)
+    }
+
+  }, [])
+
   const navItems = [
+    { label: 'Home', path: '/', disabled: false },
     { label: 'Receitas', path: '/receitas', disabled: false },
-    { label: 'Amigurumis', path: '/', disabled: true },
-    { label: 'Artes', path: '/', disabled: true },
+    { label: 'Amigurumis', path: '/amigurumis', disabled: false },
+    { label: 'Pinturas', path: '/pinturas', disabled: false },
     { label: 'Sobre', path: '/sobre', disabled: false },
-    { label: 'Login', path: '/', disabled: true },
-    { label: 'Conta', path: '/', disabled: true },
+    { label: 'Login', path: '/login', disabled: logado },
+    { label: 'Conta', path: '/conta', disabled: !logado },
   ]
+
+  const handleLinkClick = () => {
+    if (isOpen) {
+      closeMenu()
+    }
+  }
 
   return (
     <nav className='relative z-20'>
@@ -27,8 +49,8 @@ const Navbar = ({ isOpen, closeMenu }) => {
                 href={item.path}
                 className={`p-2 hover:bg-bege rounded-2xl text-center ${
                   item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-                }`}
-                onClick={closeMenu}
+                } ${router === item.path ? 'bg-bege' : ''}`}
+                onClick={handleLinkClick}
               >
                 {item.label}
               </Link>
