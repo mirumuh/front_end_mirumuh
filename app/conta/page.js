@@ -295,75 +295,109 @@ const ContaPage = () => {
                             selectedTab === 'all' ||
                             produto.metadata.tipo === selectedTab
                         )
-                        .map(produto => (
-                          <div
-                            key={produto.id}
-                            className='border border-blue rounded-2xl p-4 mb-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'
-                          >
-                            <p className='truncate sm:max-w-xs font-medium text-gray-800'>
-                              {produto.name}
-                            </p>
+                        .map(produto => {
+                          const tipo = produto.metadata.tipo
+                          const tipoPintura = produto.metadata.tipoPintura
+                          const isPrint =
+                            tipo === 'pintura' && tipoPintura === 'print'
 
-                            <div className='flex flex-wrap justify-end sm:justify-normal gap-4 items-center'>
-                              {produto.metadata.tipo === 'pintura' ? (
-                                <Switch
-                                  onToggle={state =>
-                                    handleToggle(state, produto.id)
-                                  }
-                                  value={
-                                    produto.metadata.pinturaAtiva ===
-                                    'true'
-                                  }
-                                />
-                              ) : (
-                                produto.metadata.tipo === 'amigurumi' &&
-                                (() => {
-                                  const quantidadeSegura =
-                                    Number(produto.metadata.quantidade) ||
-                                    0
+                          return (
+                            <div
+                              key={produto.id}
+                              className='border border-blue rounded-2xl p-4 mb-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'
+                            >
+                              <div className='flex flex-col sm:flex-row sm:items-center sm:gap-3'>
+                                <p className='truncate sm:max-w-xs font-medium text-gray-800'>
+                                  {produto.name}
+                                </p>
 
-                                  return (
+                                {tipo === 'pintura' && tipoPintura && (
+                                  <span className='text-xs text-white bg-secondary px-2 py-1 rounded-md mt-1 sm:mt-0 sm:ml-2'>
+                                    {tipoPintura}
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className='flex flex-wrap justify-end sm:justify-normal gap-4 items-center'>
+                                {/* Caso pintura com tipoPintura print: mostrar contador + switch */}
+                                {isPrint ? (
+                                  <>
                                     <NumberControl
-                                      value={quantidadeSegura}
+                                      value={
+                                        Number(
+                                          produto.metadata.quantidade
+                                        ) || 0
+                                      }
                                       onChange={value =>
                                         handleNumber(produto.id, value)
                                       }
                                       min={0}
                                     />
-                                  )
-                                })()
-                              )}
+                                    <Switch
+                                      onToggle={state =>
+                                        handleToggle(state, produto.id)
+                                      }
+                                      value={
+                                        produto.metadata.pinturaAtiva ===
+                                        'true'
+                                      }
+                                    />
+                                  </>
+                                ) : tipo === 'pintura' ? (
+                                  <Switch
+                                    onToggle={state =>
+                                      handleToggle(state, produto.id)
+                                    }
+                                    value={
+                                      produto.metadata.pinturaAtiva ===
+                                      'true'
+                                    }
+                                  />
+                                ) : tipo === 'amigurumi' ? (
+                                  <NumberControl
+                                    value={
+                                      Number(
+                                        produto.metadata.quantidade
+                                      ) || 0
+                                    }
+                                    onChange={value =>
+                                      handleNumber(produto.id, value)
+                                    }
+                                    min={0}
+                                  />
+                                ) : null}
 
-                              <button
-                                className='text-brown'
-                                onClick={() => handleDelete(produto.id)}
-                              >
-                                <Image
-                                  src='/icons/excluir.svg'
-                                  alt='Excluir'
-                                  className='w-5 h-5'
-                                  width={20}
-                                  height={20}
-                                />
-                              </button>
+                                <button
+                                  className='text-brown'
+                                  onClick={() => handleDelete(produto.id)}
+                                >
+                                  <Image
+                                    src='/icons/excluir.svg'
+                                    alt='Excluir'
+                                    className='w-5 h-5'
+                                    width={20}
+                                    height={20}
+                                  />
+                                </button>
 
-                              <button
-                                className='text-blue-500'
-                                onClick={() =>
-                                  handleModalEditar(produto.id)
-                                }
-                              >
-                                <Image
-                                  src='/icons/editar.svg'
-                                  alt='Editar'
-                                  className='w-5 h-5'
-                                  width={20}
-                                  height={20}
-                                />
-                              </button>
+                                <button
+                                  className='text-blue-500'
+                                  onClick={() =>
+                                    handleModalEditar(produto.id)
+                                  }
+                                >
+                                  <Image
+                                    src='/icons/editar.svg'
+                                    alt='Editar'
+                                    className='w-5 h-5'
+                                    width={20}
+                                    height={20}
+                                  />
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        ))
+                          )
+                        })
                     ) : (
                       <p className='text-center text-gray-500'>
                         Nenhum produto encontrado.
