@@ -87,9 +87,7 @@ const ModalFormularioProduto = ({
 
       const isEditing = !!idProduct
       const method = isEditing ? 'PATCH' : 'POST'
-      const endpoint = isEditing
-        ? `http://localhost:8080/product/${idProduct}`
-        : 'http://localhost:8080/product'
+      const endpoint = isEditing ? `/product/${idProduct}` : '/product'
 
       const response = await saveProducts(method, endpoint, formData)
       if (tipoProduto === 'receita' && pdf) {
