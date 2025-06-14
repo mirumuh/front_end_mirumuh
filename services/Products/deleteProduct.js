@@ -2,7 +2,7 @@ import { api } from '../api'
 
 export default async function softDeleteProduct(id) {
   try {
-    const { data: response } = await api.patch(`/product/${id}`, {
+    const { data: response } = await api.delete(`/product/${id}`, {
       active: false,
     })
 

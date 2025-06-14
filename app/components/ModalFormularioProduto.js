@@ -9,6 +9,9 @@ import SelectComponent from './SelectComponent'
 import PdfUploader from './PdfUploader'
 
 import getProductsById from '@/services/Products/getProductsById'
+import saveProducts from '@/services/Products/saveProducts'
+import uploadPdfReceita from '@/services/uploadPdf'
+import Image from 'next/image'
 
 const ModalFormularioProduto = ({
   closeModal,
@@ -49,6 +52,11 @@ const ModalFormularioProduto = ({
 
   const handleSubmit = async e => {
     e.preventDefault()
+
+    if (!camposObrigatoriosPreenchidos()) {
+      alert('Preencha todos os campos obrigatórios!')
+      return
+    }
     setIsLoading(true)
 
     try {
@@ -83,23 +91,17 @@ const ModalFormularioProduto = ({
         ? `http://localhost:8080/product/${idProduct}`
         : 'http://localhost:8080/product'
 
-      const response = await fetch(endpoint, {
-        method: method,
-        body: formData,
-      })
+      const response = await saveProducts(method, endpoint, formData)
+      if (tipoProduto === 'receita' && pdf) {
+        await uploadPdfReceita(pdf)
+      }
 
-      const result = await response.json()
-
-      if (response.ok) {
-        alert(
-          result.message ||
-            `Produto ${isEditing ? 'editado' : 'salvo'} com sucesso!`
-        )
+      if (response) {
         atualizarProdutos && atualizarProdutos()
         closeModal()
       } else {
         throw new Error(
-          result.error ||
+          response.error ||
             `Erro ao ${isEditing ? 'editar' : 'salvar'} produto!`
         )
       }
@@ -179,6 +181,21 @@ const ModalFormularioProduto = ({
     />
   )
 
+  const camposObrigatoriosPreenchidos = () => {
+    if (
+      !titulo.trim() ||
+      !descricao.trim() ||
+      !preco.trim() ||
+      !tipoProduto ||
+      (!idProduct && arquivosParaUpload.length === 0)
+    ) {
+      return false
+    }
+    if (tipoProduto === 'pintura' && !tipoPintura) return false
+    if (tipoProduto === 'receita' && (!idioma || !pdf)) return false
+    return true
+  }
+
   return (
     <>
       {isLoading || loadingProdutos ? (
@@ -248,10 +265,12 @@ const ModalFormularioProduto = ({
                   </label>
                   <div className='flex flex-wrap gap-2 p-2 border rounded-md'>
                     {imagensExistentes.map(imgUrl => (
-                      <img
+                      <Image
                         key={imgUrl}
                         src={imgUrl}
                         alt='Imagem existente'
+                        width={80}
+                        height={80}
                         className='h-20 w-20 object-cover rounded'
                       />
                     ))}

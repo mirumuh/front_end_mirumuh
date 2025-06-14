@@ -131,7 +131,7 @@ const ContaPage = () => {
       setLoading(true)
       try {
         const data = await getUserProfile()
-        setRole('admin')
+        setRole(data.role)
         setUser(data.user)
       } catch (error) {
         setError('Não foi possível carregar os dados do usuário!')
@@ -254,21 +254,23 @@ const ContaPage = () => {
               </div>
 
               {role === is_carol ? (
-                <div className='bg-white rounded-3xl shadow-lg mt-6'>
-                  <div className='bg-blue p-3 rounded-t-lg'>
+                <div className='bg-white rounded-3xl shadow-lg mt-6 w-full'>
+                  <div className='bg-blue p-3 rounded-t-3xl'>
                     <h2 className='text-lg font-bold text-brown pl-2'>
                       MEUS PRODUTOS
                     </h2>
                   </div>
-                  <div className='p-6'>
-                    <div className='flex gap-4 mb-4 overflow-x-auto'>
+
+                  <div className='p-4 sm:p-6'>
+                    {/* Tabs de categoria */}
+                    <div className='flex gap-2 sm:gap-4 mb-4 overflow-x-auto scrollbar-thin'>
                       {categories.map(tab => (
                         <button
                           key={tab.value}
-                          className={`px-4 py-2 rounded relative whitespace-nowrap ${
+                          className={`px-3 sm:px-4 py-2 rounded whitespace-nowrap transition ${
                             selectedTab === tab.value
-                              ? 'border-b-4 border-blue'
-                              : 'bg-white'
+                              ? 'border-b-4 border-blue text-blue font-semibold'
+                              : 'bg-white text-gray-700'
                           }`}
                           onClick={() => setSelectedTab(tab.value)}
                         >
@@ -276,15 +278,17 @@ const ContaPage = () => {
                         </button>
                       ))}
                       <button
-                        className='bg-blue text-brown px-4 py-2 rounded'
+                        className='bg-blue text-brown px-3 sm:px-4 py-2 rounded font-bold'
                         onClick={handleModal}
                       >
                         +
                       </button>
                     </div>
+
+                    {/* Lista de produtos */}
                     {loadingProdutos ? (
                       <Loading />
-                    ) : (
+                    ) : produtos?.length ? (
                       produtos
                         .filter(
                           produto =>
@@ -294,10 +298,13 @@ const ContaPage = () => {
                         .map(produto => (
                           <div
                             key={produto.id}
-                            className='border border-blue rounded-2xl p-4 mb-3 flex justify-between items-center'
+                            className='border border-blue rounded-2xl p-4 mb-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'
                           >
-                            <p className='truncate pr-2'>{produto.name}</p>
-                            <div className='flex gap-4 items-center flex-shrink-0'>
+                            <p className='truncate sm:max-w-xs font-medium text-gray-800'>
+                              {produto.name}
+                            </p>
+
+                            <div className='flex flex-wrap justify-end sm:justify-normal gap-4 items-center'>
                               {produto.metadata.tipo === 'pintura' ? (
                                 <Switch
                                   onToggle={state =>
@@ -326,6 +333,7 @@ const ContaPage = () => {
                                   )
                                 })()
                               )}
+
                               <button
                                 className='text-brown'
                                 onClick={() => handleDelete(produto.id)}
@@ -338,6 +346,7 @@ const ContaPage = () => {
                                   height={20}
                                 />
                               </button>
+
                               <button
                                 className='text-blue-500'
                                 onClick={() =>
@@ -355,6 +364,10 @@ const ContaPage = () => {
                             </div>
                           </div>
                         ))
+                    ) : (
+                      <p className='text-center text-gray-500'>
+                        Nenhum produto encontrado.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -367,9 +380,9 @@ const ContaPage = () => {
                   </div>
                   <div className='p-6'>
                     {pedidos?.length ? (
-                      pedidos?.map(pedido => (
+                      pedidos?.map((pedido, index) => (
                         <div
-                          key={pedido.items[0].description}
+                          key={index}
                           className='border border-blue rounded-2xl p-4 mb-3'
                         >
                           <div className='flex justify-between items-center md:flex-row flex-col gap-4'>

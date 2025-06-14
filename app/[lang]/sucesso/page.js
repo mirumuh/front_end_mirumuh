@@ -78,9 +78,10 @@ const Sucesso = () => {
         const data = {
           recipient: encodedEmail,
           subject: `Receita ${cleanedRecipeName}`,
-          body: 'Obrigada por comprar na Mirumuh! Aqui está a sua receita.',
+          body: 'Body',
           file_id: recipeNameWithoutAccents,
         }
+
         try {
           await sendEmail(data)
           sessionStorage.setItem('emailSent', 'true')

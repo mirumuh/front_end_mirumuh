@@ -25,7 +25,8 @@ const LoginPage = () => {
 
     if (!name) validationErrors.name = 'O nome é obrigatório.'
     if (!email) validationErrors.email = 'O email é obrigatório.'
-    if (!birthdate) validationErrors.birthdate = 'A data de nascimento é obrigatória.'
+    if (!birthdate)
+      validationErrors.birthdate = 'A data de nascimento é obrigatória.'
     if (!password) validationErrors.password = 'A senha é obrigatória.'
     if (password !== confirmPassword) {
       validationErrors.password = 'As senhas não coincidem.'
@@ -41,7 +42,6 @@ const LoginPage = () => {
     setIsLoading(true)
     try {
       //verificacao de usuario aqui algum dia
-      console.log('Dados enviados:', { email, password, name, birthdate });
       const response = await register({ email, password, name, birthdate })
       if (response) {
         setSuccessMessage('Usuário cadastrado com sucesso!')
@@ -56,7 +56,10 @@ const LoginPage = () => {
         }, 2000)
       }
     } catch (error) {
-      console.error('Erro ao cadastrar:', error.response ? error.response.data : error);
+      console.error(
+        'Erro ao cadastrar:',
+        error.response ? error.response.data : error
+      )
     } finally {
       setIsLoading(false)
     }
@@ -103,174 +106,197 @@ const LoginPage = () => {
       {isLoading ? (
         <Loading />
       ) : (
-        <div className='flex h-screen'>
+        <div className='relative h-screen md:flex'>
           {/* Lado esquerdo - Login */}
           <div
-            className={`relative w-2/3 bg-purple flex flex-col justify-center items-center p-8 transition-transform duration-500 ${
+            className={`absolute md:relative top-0 right-0 bottom-0 w-full md:w-2/3 bg-purple flex flex-col p-8 transition-transform duration-500 ${
               isLogin ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
+            {/* Topo */}
             <div
               onClick={() => setIsLogin(false)}
-              className='absolute flex top-6 right-6 cursor-pointer'
+              className='w-full cursor-pointer mb-4'
             >
-              <p className='text-white'>
+              <p className='text-white text-right'>
                 Ainda não tem uma conta?{' '}
                 <span className='underline font-semibold underline-offset-2'>
                   Cadastre-se!
                 </span>
               </p>
             </div>
-            <div className='text-center'>
-              <Image
-                src='/icons/logo_marcado.png'
-                alt='Logo'
-                width={96}
-                height={96}
-                className='w-24 mx-auto mb-4'
-              />
-              <h1 className='text-2xl font-semibold'>
-                Bem-vind@ à Mirumuh!
-              </h1>
-              <p className='text-white'>
-                Insira seus dados para acessar sua conta
-              </p>
-            </div>
-            <form
-              onSubmit={handleLogin}
-              className='mt-6 w-full max-w-sm flex gap-2 flex-col'
-            >
-              <input
-                type='email'
-                placeholder='Email'
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.email ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.email && (
-                <p className='text-red-500 text-sm'>{errors.email}</p>
-              )}
-              <input
-                type='password'
-                placeholder='Senha'
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.password ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.password && (
-                <p className='text-red-500 text-sm'>{errors.password}</p>
-              )}
-              <div className='flex justify-center items-center'>
-                <Button label='Entrar' variant='brown' type='submit' />
+
+            {/* Conteúdo Centralizado */}
+            <div className='flex-grow flex flex-col justify-center items-center'>
+              <div className='text-center'>
+                <Image
+                  src='/icons/logo_marcado.png'
+                  alt='Logo'
+                  width={96}
+                  height={96}
+                  className='w-24 mx-auto mb-4'
+                />
+                <h1 className='text-2xl font-semibold'>
+                  Bem-vind@ à Mirumuh!
+                </h1>
+                <p className='text-white'>
+                  Insira seus dados para acessar sua conta
+                </p>
               </div>
-            </form>
+
+              <form
+                onSubmit={handleLogin}
+                className='mt-6 w-full max-w-sm flex gap-2 flex-col'
+              >
+                <input
+                  type='email'
+                  placeholder='Email'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className='text-red-500 text-sm'>{errors.email}</p>
+                )}
+                <input
+                  type='password'
+                  placeholder='Senha'
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.password ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.password && (
+                  <p className='text-red-500 text-sm'>{errors.password}</p>
+                )}
+                <div className='flex justify-center items-center'>
+                  <Button label='Entrar' variant='brown' type='submit' />
+                </div>
+              </form>
+            </div>
           </div>
 
           {/* Lado direito - Cadastro */}
           <div
-            className={`relative w-2/3 bg-pink flex flex-col justify-center items-center p-8 transition-transform duration-500 ${
+            className={`absolute md:relative top-0 right-0 bottom-0 w-full md:w-2/3 bg-pink flex flex-col p-8 transition-transform duration-500 ${
               !isLogin ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
+            {/* Topo: Link para login */}
             <div
               onClick={() => setIsLogin(true)}
-              className='absolute flex top-6 left-6 cursor-pointer'
+              className='w-full cursor-pointer mb-4'
             >
-              <p className='text-black'>
+              <p className='text-black text-left'>
                 Já tem uma conta?{' '}
                 <span className='underline font-semibold underline-offset-2'>
                   Entre aqui!
                 </span>
               </p>
             </div>
-            <div className='text-center'>
-              <Image
-                src='/icons/logo_marcado.png'
-                alt='Logo'
-                width={96}
-                height={96}
-                className='w-24 mx-auto mb-4'
-              />
-              <h1 className='text-2xl font-semibold'>
-                Cadastre-se na Mirumuh!
-              </h1>
-              <p className='text-black'>
-                Insira seus dados para criar uma nova conta
-              </p>
-            </div>
-            <form
-              onSubmit={handleCadastrar}
-              className='mt-6 w-full max-w-sm flex gap-2 flex-col'
-            >
-              <input
-                type='text'
-                placeholder='Nome'
-                value={name}
-                onChange={e => setName(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.name ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.name && (
-                <p className='text-red-500 text-sm'>{errors.name}</p>
-              )}
-              <input
-                type='email'
-                placeholder='Email'
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.email ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.email && (
-                <p className='text-red-500 text-sm'>{errors.email}</p>
-              )}
-              <input
-                type='date'
-                value={birthdate}
-                onChange={e => setBirthdate(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.birthdate ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.birthdate && (
-                <p className='text-red-500 text-sm'>{errors.birthdate}</p>
-              )}
-              <input
-                type='password'
-                placeholder='Senha'
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.password ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.password && (
-                <p className='text-red-500 text-sm'>{errors.password}</p>
-              )}
-              <input
-                type='password'
-                placeholder='Confirmar Senha'
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                className={`w-full p-3 mb-1 border rounded-lg ${
-                  errors.confirmPassword ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.confirmPassword && (
-                <p className='text-red-500 text-sm'>
-                  {errors.confirmPassword}
+
+            {/* Centro: conteúdo principal */}
+            <div className='flex-grow flex flex-col justify-center items-center'>
+              <div className='text-center'>
+                <Image
+                  src='/icons/logo_marcado.png'
+                  alt='Logo'
+                  width={96}
+                  height={96}
+                  className='w-24 mx-auto mb-4'
+                />
+                <h1 className='text-2xl font-semibold'>
+                  Cadastre-se na Mirumuh!
+                </h1>
+                <p className='text-black'>
+                  Insira seus dados para criar uma nova conta
                 </p>
-              )}
-              <div className='flex justify-center items-center'>
-                <Button label='Cadastrar' variant='brown' type='submit' />
               </div>
-            </form>
+
+              <form
+                onSubmit={handleCadastrar}
+                className='mt-6 w-full max-w-sm flex gap-2 flex-col'
+              >
+                <input
+                  type='text'
+                  placeholder='Nome'
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.name ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.name && (
+                  <p className='text-red-500 text-sm'>{errors.name}</p>
+                )}
+
+                <input
+                  type='email'
+                  placeholder='Email'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className='text-red-500 text-sm'>{errors.email}</p>
+                )}
+
+                <input
+                  type='date'
+                  value={birthdate}
+                  onChange={e => setBirthdate(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.birthdate ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.birthdate && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.birthdate}
+                  </p>
+                )}
+
+                <input
+                  type='password'
+                  placeholder='Senha'
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.password ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.password && (
+                  <p className='text-red-500 text-sm'>{errors.password}</p>
+                )}
+
+                <input
+                  type='password'
+                  placeholder='Confirmar Senha'
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  className={`w-full p-3 mb-1 border rounded-lg ${
+                    errors.confirmPassword ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.confirmPassword && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.confirmPassword}
+                  </p>
+                )}
+
+                <div className='flex justify-center items-center'>
+                  <Button
+                    label='Cadastrar'
+                    variant='brown'
+                    type='submit'
+                  />
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

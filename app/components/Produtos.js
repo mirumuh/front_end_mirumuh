@@ -17,37 +17,70 @@ const Produtos = ({
   const [selectedImage, setSelectedImage] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [thumbStart, setThumbStart] = useState(0)
 
   const tipoProduto = metadata?.tipo
   const pinturaAtiva = metadata?.pinturaAtiva === 'true'
   const quantidadeAmigurumi = metadata?.quantidade
 
-  const renderImages = (images, size) => {
-    return images.map((src, index) => (
-      <div
-        key={index}
-        className={`bg-white w-full rounded-lg shadow-lg ${size} cursor-pointer`}
-        onClick={() => {
-          setSelectedImage(src)
-          setCurrentIndex(index)
-        }}
-      >
-        <div className='flex items-center justify-center border rounded-lg h-44 w-44 overflow-hidden relative p-3'>
-          <Image
-            src={src}
-            alt={`Imagem ${index + 1}`}
-            fill
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-            }}
-            loader={({ src }) => src}
-            className='rounded-2xl p-3'
-          />
-        </div>
-      </div>
-    ))
+  const thumbsToShow = 3
+  const thumbs = arrayImagens.slice(thumbStart, thumbStart + thumbsToShow)
+
+  const handlePrevThumb = () => {
+    if (thumbStart > 0) setThumbStart(thumbStart - 1)
   }
+  const handleNextThumb = () => {
+    if (thumbStart + thumbsToShow < arrayImagens.length)
+      setThumbStart(thumbStart + 1)
+  }
+
+  const renderThumbnails = () => (
+    <div className='flex flex-col items-center gap-2 relative'>
+      {arrayImagens.length > thumbsToShow && (
+        <button
+          className='mb-1 text-gray-400 hover:text-blue-600'
+          onClick={handlePrevThumb}
+          disabled={thumbStart === 0}
+          style={{ fontSize: 18 }}
+        >
+          ▲
+        </button>
+      )}
+      <div className='flex flex-col gap-2 max-h-56 overflow-y-auto'>
+        {thumbs.map((src, idx) => (
+          <div
+            key={thumbStart + idx}
+            className={`border-2 rounded-lg cursor-pointer w-16 h-16 overflow-hidden bg-white ${
+              selectedImage === src ? 'border-blue-600' : 'border-gray-200'
+            }`}
+            onClick={() => {
+              setSelectedImage(src)
+              setCurrentIndex(thumbStart + idx)
+            }}
+          >
+            <Image
+              src={src}
+              alt={`Miniatura ${thumbStart + idx + 1}`}
+              width={64}
+              height={64}
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              className='rounded-lg'
+            />
+          </div>
+        ))}
+      </div>
+      {arrayImagens.length > thumbsToShow && (
+        <button
+          className='mt-1 text-gray-400 hover:text-blue-600'
+          onClick={handleNextThumb}
+          disabled={thumbStart + thumbsToShow >= arrayImagens.length}
+          style={{ fontSize: 18 }}
+        >
+          ▼
+        </button>
+      )}
+    </div>
+  )
 
   const handlePrevImage = () => {
     const newIndex =
@@ -69,16 +102,23 @@ const Produtos = ({
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
       {/* Desktop */}
-      <div className='hidden md:flex justify-between items-center px-60 pt-14 pb-16 w-full gap-20'>
+      <div className='hidden md:flex justify-between items-start px-60 pt-14 pb-16 w-full gap-20'>
         {metadata?.tipo !== 'pintura' || pinturaAtiva ? (
           <>
-            <div className='flex justify-center items-center w-full gap-5'>
+            <div className='flex justify-center items-center w-1/2 gap-5'>
               <div className='flex flex-col gap-5'>
-                {renderImages(arrayImagens, 'min-h-32')}
+                {renderThumbnails()}
               </div>
               <div className='bg-white w-full h-128 rounded-lg shadow-lg flex flex-col justify-center items-center'>
-                <div className='w-full h-128 flex justify-center items-center gap-2'>
-                  <Button label='&lt;' onClick={handlePrevImage} />
+                <div className='w-full h-128 flex justify-center items-center gap-2 px-3'>
+                  {arrayImagens.length > thumbsToShow && (
+                    <Button
+                      label='&lt;'
+                      onClick={handlePrevImage}
+                      size='small'
+                    />
+                  )}
+
                   <div className='flex justify-center p-3 items-center object-scale-down'>
                     {isLoading && (
                       <div className='absolute inset-0 flex justify-center items-center'>
@@ -88,7 +128,7 @@ const Produtos = ({
 
                     <div className='flex items-center justify-center border rounded-2xl w-96 p-1 h-96 overflow-hidden relative'>
                       <Image
-                        src={arrayImagens[0]}
+                        src={selectedImage || arrayImagens[0]}
                         alt='Imagens'
                         fill
                         style={{
@@ -100,7 +140,13 @@ const Produtos = ({
                       />
                     </div>
                   </div>
-                  <Button label='&gt;' onClick={handleNextImage} />
+                  {arrayImagens.length > thumbsToShow && (
+                    <Button
+                      label='&gt;'
+                      onClick={handleNextImage}
+                      size='small'
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -133,9 +179,7 @@ const Produtos = ({
           </>
         ) : (
           <div className='flex justify-center items-center w-full gap-5'>
-            <div className='flex flex-col gap-5'>
-              {renderImages(arrayImagens, 'min-h-32')}
-            </div>
+            <div className='flex flex-col gap-5'>{renderThumbnails()}</div>
             <div className='bg-white w-full h-144 rounded-lg shadow-lg flex flex-col justify-center items-center p-5'>
               <div className='flex justify-between items-center w-full gap-8 '>
                 <BackButton />
@@ -144,7 +188,13 @@ const Produtos = ({
                 </span>
               </div>
               <div className='w-full h-128 flex justify-center items-center gap-2'>
-                <Button label='&lt;' onClick={handlePrevImage} />
+                {arrayImagens.length > thumbsToShow && (
+                  <Button
+                    label='&lt;'
+                    onClick={handlePrevImage}
+                    size='small'
+                  />
+                )}
                 <div className='flex justify-center p-3 items-center object-scale-down'>
                   {isLoading && (
                     <div className='absolute inset-0 flex justify-center items-center'>
@@ -153,7 +203,7 @@ const Produtos = ({
                   )}
                   <div className='flex items-center justify-center border rounded-2xl w-96 p-1 h-96 overflow-hidden relative'>
                     <Image
-                      src={arrayImagens[0]}
+                      src={selectedImage || arrayImagens[0]}
                       alt='Imagens'
                       fill
                       style={{
@@ -165,23 +215,37 @@ const Produtos = ({
                     />
                   </div>
                 </div>
-                <Button label='&gt;' onClick={handleNextImage} />
+
+                {arrayImagens.length > thumbsToShow && (
+                  <Button
+                    label='&gt;'
+                    onClick={handleNextImage}
+                    size='small'
+                  />
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
       {/* Mobile */}
-      <div className='block md:hidden w-full h-screenHeader overflow-y-auto px-5 py-5 sm:py-10 md:px-20 lg:px-40 lg:py-14'>
+      <div className='block md:hidden w-full h-screenHeader overflow-y-auto px-5 py-5 small:py-10 md:px-20 lg:px-40 lg:py-14'>
         {metadata?.tipo !== 'pintura' || pinturaAtiva ? (
           <div className='flex flex-col gap-5 bg-white shadow-lg min-h-144 rounded-lg p-5'>
             <BackButton />
             <div className='flex flex-col justify-center items-center gap-10 h-full'>
               <div className='w-full max-h-128 flex justify-center items-center gap-10'>
-                <Button label='&lt;' onClick={handlePrevImage} />
+                {arrayImagens.length > thumbsToShow && (
+                  <Button
+                    label='&lt;'
+                    onClick={handlePrevImage}
+                    size='small'
+                  />
+                )}
+
                 <div className='flex justify-center items-center object-scale-down'>
                   <Image
-                    src={arrayImagens[0]}
+                    src={selectedImage || arrayImagens[0]}
                     alt='Imagem da Receita'
                     width={300}
                     height={300}
@@ -189,7 +253,14 @@ const Produtos = ({
                     loader={({ src }) => src}
                   />
                 </div>
-                <Button label='&gt;' onClick={handleNextImage} />
+
+                {arrayImagens.length > thumbsToShow && (
+                  <Button
+                    label='&gt;'
+                    onClick={handleNextImage}
+                    size='small'
+                  />
+                )}
               </div>
               <div className='flex flex-col gap-5 px-2'>
                 <span className='text-4xl font-moreSugar text-center'>
@@ -216,7 +287,14 @@ const Produtos = ({
               </span>
             </div>
             <div className='w-full max-h-128 flex justify-center items-center gap-2 '>
-              <Button label='&lt;' onClick={handlePrevImage} />
+              {arrayImagens.length > thumbsToShow && (
+                <Button
+                  label='&lt;'
+                  onClick={handlePrevImage}
+                  size='small'
+                />
+              )}
+
               <div className='flex justify-center p-3 items-center object-scale-down relative'>
                 {isLoading && (
                   <div className='absolute inset-0 flex justify-center items-center'>
@@ -225,7 +303,7 @@ const Produtos = ({
                 )}
                 <div className='flex justify-center items-center object-scale-down'>
                   <Image
-                    src={arrayImagens[0]}
+                    src={selectedImage || arrayImagens[0]}
                     alt='Imagem da Receita'
                     width={300}
                     height={300}
@@ -234,7 +312,13 @@ const Produtos = ({
                   />
                 </div>
               </div>
-              <Button label='&gt;' onClick={handleNextImage} />
+              {arrayImagens.length > thumbsToShow && (
+                <Button
+                  label='&gt;'
+                  onClick={handleNextImage}
+                  size='small'
+                />
+              )}
             </div>
           </div>
         )}

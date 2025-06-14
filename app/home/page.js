@@ -61,7 +61,7 @@ const HomePage = () => {
                         {slide.image ? (
                           <Image
                             src={slide.image}
-                            alt={slide.title}
+                            alt={slide.name}
                             width={250}
                             height={250}
                             className='object-cover rounded-3xl'
