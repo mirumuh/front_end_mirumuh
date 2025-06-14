@@ -97,6 +97,11 @@ const PinturasPage = () => {
                   key={index}
                   product={pintura}
                   pinturaAtiva={pintura.metadata.pinturaAtiva}
+                  buttonColor={
+                    pintura.metadata.pinturaAtiva === 'true'
+                      ? 'green'
+                      : 'blue'
+                  }
                   buttonLabel={
                     pintura.metadata.pinturaAtiva === 'true'
                       ? 'Comprar'

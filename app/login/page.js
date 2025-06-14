@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import login, { register } from '@/services/login'
 import Loading from '../components/Loading'
+import BackButton from '../components/BackButton'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -116,8 +117,9 @@ const LoginPage = () => {
             {/* Topo */}
             <div
               onClick={() => setIsLogin(false)}
-              className='w-full cursor-pointer mb-4'
+              className='w-full cursor-pointer mb-4 flex justify-between items-center'
             >
+              <BackButton urlBack={'/home'} />
               <p className='text-white text-right'>
                 Ainda não tem uma conta?{' '}
                 <span className='underline font-semibold underline-offset-2'>
@@ -188,8 +190,9 @@ const LoginPage = () => {
             {/* Topo: Link para login */}
             <div
               onClick={() => setIsLogin(true)}
-              className='w-full cursor-pointer mb-4'
+              className='w-full cursor-pointer mb-4 flex justify-between items-center'
             >
+              <BackButton urlBack={'/home'} />
               <p className='text-black text-left'>
                 Já tem uma conta?{' '}
                 <span className='underline font-semibold underline-offset-2'>

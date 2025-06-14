@@ -1,7 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-const GridProducts = ({ product, buttonLabel, pinturaAtiva }) => {
+const GridProducts = ({
+  product,
+  buttonLabel,
+  buttonColor,
+  pinturaAtiva,
+}) => {
   return (
     <div className='flex flex-col gap-4 bg-white rounded-3xl shadow-lg p-10 items-center'>
       <div className='flex items-center justify-center border rounded-2xl w-full p-1 h-56 overflow-hidden relative'>
@@ -35,7 +40,14 @@ const GridProducts = ({ product, buttonLabel, pinturaAtiva }) => {
           pathname: `/produtos/${product?.id}`,
           query: { produto: JSON.stringify(product) },
         }}
-        className='bg-blue hover:bg-light-darker-blue text-white px-5 py-2 rounded-xl shadow w-min whitespace-nowrap'
+        className={`
+          ${
+            buttonColor === 'green'
+              ? 'bg-secondary hover:bg-secondary-hover'
+              : 'bg-blue hover:bg-light-darker-blue'
+          }
+ text-white px-5 py-2 rounded-xl shadow w-min whitespace-nowrap
+`}
       >
         {buttonLabel}
       </Link>

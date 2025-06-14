@@ -33,6 +33,7 @@ module.exports = {
         foreground: '#bc915d',
         primary: '#c1e6e9',
         secondary: '#c2eb7d',
+        'secondary-hover': '#b2d66c',
         pink: '#ffbbdc',
         'light-pink': '#ffe3e3',
         'light-darker-pink': '#FFCAD3',

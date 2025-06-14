@@ -2,9 +2,13 @@ import Image from 'next/image'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
-const BackButton = () => {
+const BackButton = ({ urlBack }) => {
   const router = useRouter()
   const handleBack = () => {
+    if (urlBack) {
+      window.location = urlBack
+      return
+    }
     router.back()
   }
   return (

@@ -22,6 +22,8 @@ const AmigurumisPage = () => {
     }
   }
 
+  console.log(allProducts)
+
   useEffect(() => {
     fetchProduto()
   }, [])
@@ -45,7 +47,16 @@ const AmigurumisPage = () => {
               <GridProducts
                 key={index}
                 product={amigurimi}
-                buttonLabel={'Ver Amigumuri'}
+                buttonColor={
+                  Number(amigurimi.metadata?.quantidade) > 0
+                    ? 'green'
+                    : 'blue'
+                }
+                buttonLabel={
+                  Number(amigurimi.metadata?.quantidade) > 0
+                    ? 'Disponível'
+                    : 'Sob Encomenda'
+                }
               />
             ))}
           </div>
