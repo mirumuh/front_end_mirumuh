@@ -31,7 +31,7 @@ const AmigurumisPage = () => {
       {isLoading ? (
         <Loading />
       ) : allProducts.length === 0 ? (
-        <div className=' flex flex-col gap-6 justify-center items-center  w-full'>
+        <div className=' flex flex-col gap-6 justify-center items-center py-10  w-full'>
           <div className='flex flex-row justify-center items-center w-fit bg-white rounded-3xl shadow-lg py-5 px-6 md:px-8'>
             <h2 className='text-[16px] font-semibold'>
               Não há amigurumis disponíveis
