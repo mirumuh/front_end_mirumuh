@@ -2,11 +2,11 @@
 const nextConfig = {
   images: {
     domains: [
-      'res.cloudinary.com',
       'lh3.googleusercontent.com',
       'files.stripe.com',
       'drive.google.com',
-      'localhost'
+      'localhost',
+      'api.mirumuh.com.br',
     ],
   },
 

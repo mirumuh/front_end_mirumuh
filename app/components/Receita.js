@@ -19,7 +19,6 @@ const Receita = ({ receita }) => {
                 }
               : {}
           }
-          unoptimized={receita?.images[0] ? false : true}
         />
       </div>
 
