@@ -7,8 +7,6 @@ import getProductsWithPrice from '@/services/Products/getProducts'
 const Receitas = () => {
   const [allProducts, setAllProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  //const [selectedCategory, setSelectedCategory] = useState('')
-  //const [filteredProducts, setFilteredProducts] = useState([])
 
   const fetchProduto = async () => {
     setIsLoading(true)
@@ -26,20 +24,6 @@ const Receitas = () => {
   useEffect(() => {
     fetchProduto()
   }, [])
-
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     setFilteredProducts(
-  //       allProducts.filter(
-  //         produto =>
-  //           produto.category?.trim().toLowerCase() ===
-  //           selectedCategory.toLowerCase()
-  //       )
-  //     )
-  //   } else {
-  //     setFilteredProducts(allProducts)
-  //   }
-  // }, [selectedCategory, allProducts])
 
   return (
     <div className='w-full h-screenHeader overflow-y-auto'>
