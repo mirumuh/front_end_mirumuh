@@ -22,8 +22,6 @@ const AmigurumisPage = () => {
     }
   }
 
-  console.log(allProducts)
-
   useEffect(() => {
     fetchProduto()
   }, [])
