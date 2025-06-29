@@ -86,8 +86,7 @@ const Modal = ({ produto, closeModal }) => {
               <form onSubmit={checkout} className='flex flex-col gap-4'>
                 <div className='flex flex-col justify-between items-center gap-5'>
                   <span className='text-brown text-center'>
-                    Fique atento à linguagem da receita que você está
-                    comprando! Preencha seu e-mail para receber a receita:
+                    Preencha seu e-mail para receber a receita:
                   </span>
                   <input
                     type='email'
