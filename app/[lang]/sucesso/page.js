@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { useParams, useSearchParams } from 'next/navigation'
 import Button from '@/app/components/Button'
 import downloadReceita from '@/services/downloadReceita'
-import { useEffect } from 'react'
 import sendEmail from '@/services/sendEmail'
+import { useEffect } from 'react'
 
 // Traduções
 const messages = {
@@ -48,14 +48,25 @@ const Sucesso = () => {
 
   const cleanedRecipeName = cleanRecipeName(recipeName)
 
+  const removeAccents = str => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  }
+
+  const recipeNameWithoutAccents = removeAccents(recipeName)
+
+  const fileIds = [
+    `PTBR_${recipeNameWithoutAccents}`,
+    `EN_${recipeNameWithoutAccents}`,
+  ]
+
   const downloadPDF = async () => {
     try {
-      const blob = await downloadReceita({ id: recipeNameWithoutAccents })
-      const url = window.URL.createObjectURL(blob)
+      const zipBlob = await downloadReceita(fileIds)
 
+      const url = window.URL.createObjectURL(zipBlob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `${recipeName}`
+      a.download = `Receitas_Mirumuh_${recipeNameWithoutAccents}.zip`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -65,31 +76,31 @@ const Sucesso = () => {
     }
   }
 
-  const removeAccents = str => {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-  }
-
-  const recipeNameWithoutAccents = removeAccents(recipeName)
-
   useEffect(() => {
     const sendEmailTo = async () => {
       const emailSent = sessionStorage.getItem('emailSent')
       if (!emailSent) {
-        const data = {
-          recipient: encodedEmail,
-          subject: `Receita ${cleanedRecipeName}`,
-          body: 'Body',
-          file_id: recipeNameWithoutAccents,
-        }
-
         try {
+          const fileIds = [
+            `PTBR_${recipeNameWithoutAccents}`,
+            `EN_${recipeNameWithoutAccents}`,
+          ]
+
+          const data = {
+            recipient: encodedEmail,
+            subject: `Receita ${cleanedRecipeName}`,
+            body: 'Segue anexa a receita do amigurumi.',
+            file_id: fileIds,
+          }
+
           await sendEmail(data)
           sessionStorage.setItem('emailSent', 'true')
         } catch (error) {
-          console.error('Failed to send email:', error)
+          console.error('Erro ao enviar email com os PDFs:', error)
         }
       }
     }
+
     sendEmailTo()
   }, [encodedEmail, recipeName, recipeNameWithoutAccents])
 

@@ -1,9 +1,12 @@
 import { api } from './api'
 
-export default async function uploadPdfReceita(file) {
+export default async function uploadPdfReceita(files) {
   try {
     const formData = new FormData()
-    formData.append('file', file) // Backend pode esperar outro nome, verifique
+
+    files.forEach(file => {
+      formData.append('files', file)
+    })
 
     const { data: response } = await api.post(`/upload-recipe`, formData, {
       headers: {

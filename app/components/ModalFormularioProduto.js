@@ -21,7 +21,8 @@ const ModalFormularioProduto = ({
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
-  const [pdf, setPdf] = useState(null)
+  const [pdf1, setPdf1] = useState(null)
+  const [pdf2, setPdf2] = useState(null)
   const [tipoPintura, setTipoPintura] = useState('')
   const [idioma, setIdioma] = useState('')
   const [tipoProduto, setTipoProduto] = useState('')
@@ -81,7 +82,7 @@ const ModalFormularioProduto = ({
       formData.append('description', descricao)
       formData.append('tipo', tipoProduto)
       formData.append('price', formatPrice(preco))
-      if (tipoProduto === 'receita') formData.append('idioma', idioma)
+
       if (tipoProduto === 'pintura')
         formData.append('tipoPintura', tipoPintura)
 
@@ -90,8 +91,13 @@ const ModalFormularioProduto = ({
       const endpoint = isEditing ? `/product/${idProduct}` : '/product'
 
       const response = await saveProducts(method, endpoint, formData)
-      if (tipoProduto === 'receita' && pdf) {
-        await uploadPdfReceita(pdf)
+
+      if (tipoProduto === 'receita') {
+        if (pdf1 && pdf2) {
+          var pdfs = [pdf1, pdf2]
+          pdfs = renamePdfFiles(pdfs, titulo)
+          await uploadPdfReceita(pdfs)
+        }
       }
 
       if (response) {
@@ -142,6 +148,21 @@ const ModalFormularioProduto = ({
     }
   }
 
+  const renamePdfFiles = (files, titulo) => {
+    return files.map((file, index) => {
+      const prefix = index === 0 ? 'PTBR_' : 'EN_'
+
+      // Cria o novo nome usando o título
+      const sanitizedTitle = titulo.replace(/\s+/g, '_')
+      const newFileName = `${prefix}${sanitizedTitle}.pdf`
+
+      const renamedFile = new File([file], newFileName, {
+        type: file.type,
+      })
+      return renamedFile
+    })
+  }
+
   useEffect(() => {
     if (idProduct) {
       fetchProdutoById(idProduct)
@@ -150,18 +171,13 @@ const ModalFormularioProduto = ({
 
   const receitaForm = (
     <>
-      <SelectComponent
-        value={idioma}
-        setValue={setIdioma}
-        options={[
-          { value: 'ptbr', label: 'Português' },
-          { value: 'us', label: 'Inglês' },
-        ]}
-        label={'Idioma'}
+      <PdfUploader
+        label={'PDF do Produto (Português)'}
+        onPdfUpload={file => setPdf1(file)}
       />
       <PdfUploader
-        label={'PDF do Produto'}
-        onPdfUpload={file => setPdf(file)}
+        label={'PDF do Produto (Inglês)'}
+        onPdfUpload={file => setPdf2(file)}
       />
     </>
   )
@@ -190,7 +206,7 @@ const ModalFormularioProduto = ({
       return false
     }
     if (tipoProduto === 'pintura' && !tipoPintura) return false
-    if (tipoProduto === 'receita' && (!idioma || !pdf)) return false
+    if (tipoProduto === 'receita' && (!pdf1 || !pdf2)) return false
     return true
   }
 

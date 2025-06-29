@@ -111,7 +111,7 @@ const Produtos = ({
               </div>
               <div className='bg-white w-full h-128 rounded-lg shadow-lg flex flex-col justify-center items-center'>
                 <div className='w-full h-128 flex justify-center items-center gap-2 px-3'>
-                  {arrayImagens.length > thumbsToShow && (
+                  {arrayImagens.length > 1 && (
                     <Button
                       label='&lt;'
                       onClick={handlePrevImage}
@@ -140,7 +140,7 @@ const Produtos = ({
                       />
                     </div>
                   </div>
-                  {arrayImagens.length > thumbsToShow && (
+                  {arrayImagens.length > 1 && (
                     <Button
                       label='&gt;'
                       onClick={handleNextImage}
@@ -188,7 +188,7 @@ const Produtos = ({
                 </span>
               </div>
               <div className='w-full h-128 flex justify-center items-center gap-2'>
-                {arrayImagens.length > thumbsToShow && (
+                {arrayImagens.length > 1 && (
                   <Button
                     label='&lt;'
                     onClick={handlePrevImage}
@@ -216,7 +216,7 @@ const Produtos = ({
                   </div>
                 </div>
 
-                {arrayImagens.length > thumbsToShow && (
+                {arrayImagens.length > 1 && (
                   <Button
                     label='&gt;'
                     onClick={handleNextImage}
@@ -235,7 +235,7 @@ const Produtos = ({
             <BackButton />
             <div className='flex flex-col justify-center items-center gap-10 h-full'>
               <div className='w-full max-h-128 flex justify-center items-center gap-10'>
-                {arrayImagens.length > thumbsToShow && (
+                {arrayImagens.length > 1 && (
                   <Button
                     label='&lt;'
                     onClick={handlePrevImage}
@@ -254,7 +254,7 @@ const Produtos = ({
                   />
                 </div>
 
-                {arrayImagens.length > thumbsToShow && (
+                {arrayImagens.length > 1 && (
                   <Button
                     label='&gt;'
                     onClick={handleNextImage}
@@ -287,7 +287,7 @@ const Produtos = ({
               </span>
             </div>
             <div className='w-full max-h-128 flex justify-center items-center gap-2 '>
-              {arrayImagens.length > thumbsToShow && (
+              {arrayImagens.length > 1 && (
                 <Button
                   label='&lt;'
                   onClick={handlePrevImage}
@@ -312,7 +312,7 @@ const Produtos = ({
                   />
                 </div>
               </div>
-              {arrayImagens.length > thumbsToShow && (
+              {arrayImagens.length > 1 && (
                 <Button
                   label='&gt;'
                   onClick={handleNextImage}
