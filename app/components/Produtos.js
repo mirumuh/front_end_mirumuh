@@ -38,7 +38,7 @@ const Produtos = ({
     <div className='flex flex-col items-center gap-2 relative'>
       {arrayImagens.length > thumbsToShow && (
         <button
-          className='mb-1 text-gray-400 hover:text-blue-600'
+          className='mb-1 text-pink bg-light-pink rounded-lg hover:text-blue-600'
           onClick={handlePrevThumb}
           disabled={thumbStart === 0}
           style={{ fontSize: 18 }}
@@ -46,7 +46,7 @@ const Produtos = ({
           ▲
         </button>
       )}
-      <div className='flex flex-col gap-2 max-h-56 overflow-y-auto'>
+      <div className='flex flex-col  gap-2 max-h-56 overflow-y-auto'>
         {thumbs.map((src, idx) => (
           <div
             key={thumbStart + idx}
@@ -71,7 +71,7 @@ const Produtos = ({
       </div>
       {arrayImagens.length > thumbsToShow && (
         <button
-          className='mt-1 text-gray-400 hover:text-blue-600'
+          className='mt-1 text-pink bg-light-pink rounded-lg hover:text-blue-600'
           onClick={handleNextThumb}
           disabled={thumbStart + thumbsToShow >= arrayImagens.length}
           style={{ fontSize: 18 }}

@@ -12,6 +12,8 @@ import getProductsById from '@/services/Products/getProductsById'
 import saveProducts from '@/services/Products/saveProducts'
 import uploadPdfReceita from '@/services/uploadPdf'
 import Image from 'next/image'
+import downloadReceita from '@/services/downloadReceita'
+import unzipBlob from '@/services/unzipBlob'
 
 const ModalFormularioProduto = ({
   closeModal,
@@ -24,13 +26,13 @@ const ModalFormularioProduto = ({
   const [pdf1, setPdf1] = useState(null)
   const [pdf2, setPdf2] = useState(null)
   const [tipoPintura, setTipoPintura] = useState('')
-  const [idioma, setIdioma] = useState('')
   const [tipoProduto, setTipoProduto] = useState('')
 
   const [arquivosParaUpload, setArquivosParaUpload] = useState([])
   const [imagensExistentes, setImagensExistentes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [loadingProdutos, setLoadingProdutos] = useState(false)
+  const [pdfNames, setPdfNames] = useState(['', '']) // para mostrar os nomes
 
   const formatPrice = price => {
     if (!price) return 0
@@ -86,6 +88,12 @@ const ModalFormularioProduto = ({
       if (tipoProduto === 'pintura')
         formData.append('tipoPintura', tipoPintura)
 
+      if (tipoProduto === 'receita' && pdf1 && pdf2) {
+        let pdfs = [pdf1, pdf2]
+        pdfs = renamePdfFiles(pdfs, titulo)
+        formData.append('pdfs', JSON.stringify(pdfs.map(pdf => pdf.name)))
+      }
+
       const isEditing = !!idProduct
       const method = isEditing ? 'PATCH' : 'POST'
       const endpoint = isEditing ? `/product/${idProduct}` : '/product'
@@ -133,16 +141,19 @@ const ModalFormularioProduto = ({
       setImagensExistentes(response.images || [])
       setTipoProduto(response.metadata?.tipo || '')
       setTipoPintura(response.metadata?.tipoPintura || '')
-      setIdioma(response.metadata?.idioma || '')
-      setPdf(response.metadata?.pdf || null)
+
+      const pdfIds = response.metadata?.pdfs || []
+
+      if (pdfIds.length === 2) {
+        const blobZip = await downloadReceita(pdfIds)
+        const zip = await unzipBlob(blobZip)
+        setPdf1(zip[0])
+        setPdf2(zip[1])
+        setPdfNames([zip[0].name, zip[1].name])
+      }
     } catch (error) {
-      console.error(
-        'Erro detalhado ao buscar produto:',
-        error.response || error
-      )
-      alert(
-        'Não foi possível carregar os dados do produto. Verifique o console do navegador para mais detalhes.'
-      )
+      console.error('Erro detalhado ao buscar produto:', error)
+      alert('Não foi possível carregar os dados do produto.')
     } finally {
       setLoadingProdutos(false)
     }
@@ -179,6 +190,49 @@ const ModalFormularioProduto = ({
         label={'PDF do Produto (Inglês)'}
         onPdfUpload={file => setPdf2(file)}
       />
+      {/* {[pdf1, pdf2].map((pdf, index) => (
+        <div key={index} className='flex flex-col gap-1'>
+          <label className='font-semibold text-dark-purple'>
+            PDF do Produto ({index === 0 ? 'Português' : 'Inglês'})
+          </label>
+
+          {pdf ? (
+            <div className='flex items-center justify-between bg-gray-100 p-2 rounded'>
+              <span className='text-sm truncate max-w-[70%]'>
+                {pdf.name || pdfNames[index]}
+              </span>
+              <div className='flex gap-2'>
+                <a
+                  href={URL.createObjectURL(pdf)}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-blue-600 text-xs underline'
+                >
+                  Visualizar
+                </a>
+                <button
+                  type='button'
+                  onClick={() =>
+                    index === 0 ? setPdf1(null) : setPdf2(null)
+                  }
+                  className='text-red-600 text-xs'
+                >
+                  Remover
+                </button>
+              </div>
+            </div>
+          ) : (
+            <PdfUploader
+              label={`Enviar novo PDF (${
+                index === 0 ? 'Português' : 'Inglês'
+              })`}
+              onPdfUpload={file =>
+                index === 0 ? setPdf1(file) : setPdf2(file)
+              }
+            />
+          )}
+        </div>
+      ))} */}
     </>
   )
 
@@ -208,6 +262,15 @@ const ModalFormularioProduto = ({
     if (tipoProduto === 'pintura' && !tipoPintura) return false
     if (tipoProduto === 'receita' && (!pdf1 || !pdf2)) return false
     return true
+  }
+
+  const handleRemoveImagemExistente = url => {
+    const confirmDelete = confirm(
+      'Tem certeza que deseja remover esta imagem?'
+    )
+    if (!confirmDelete) return
+
+    setImagensExistentes(prev => prev.filter(imagem => imagem !== url))
   }
 
   return (
@@ -273,14 +336,25 @@ const ModalFormularioProduto = ({
                   </label>
                   <div className='flex flex-wrap gap-2 p-2 border rounded-md'>
                     {imagensExistentes.map(imgUrl => (
-                      <Image
-                        key={imgUrl}
-                        src={imgUrl}
-                        alt='Imagem existente'
-                        width={80}
-                        height={80}
-                        className='h-20 w-20 object-cover rounded'
-                      />
+                      <div key={imgUrl} className='relative'>
+                        <Image
+                          src={imgUrl}
+                          alt='Imagem existente'
+                          width={80}
+                          height={80}
+                          className='h-20 w-20 object-cover rounded'
+                        />
+                        <button
+                          type='button'
+                          onClick={() =>
+                            handleRemoveImagemExistente(imgUrl)
+                          }
+                          className='absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-700'
+                          title='Remover imagem'
+                        >
+                          ×
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -301,6 +375,13 @@ const ModalFormularioProduto = ({
               {tipoProduto === 'pintura' && pinturaForm}
 
               <div className='flex justify-end mt-4'>
+                <button
+                  type='button'
+                  onClick={closeModal}
+                  className='mr-4 px-4 py-2 text-dark-purple rounded '
+                >
+                  Cancelar
+                </button>
                 <Button
                   variant={'brown'}
                   type={'submit'}
