@@ -215,14 +215,8 @@ const ModalFormularioProduto = ({
       {isLoading || loadingProdutos ? (
         <Loading />
       ) : (
-        <div
-          className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'
-          onClick={closeModal}
-        >
-          <div
-            className='bg-white p-10 rounded-lg max-w-2xl max-h-[90vh] overflow-y-auto w-full flex flex-col gap-9'
-            onClick={e => e.stopPropagation()}
-          >
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+          <div className='bg-white p-10 rounded-lg max-w-2xl max-h-[90vh] overflow-y-auto w-full flex flex-col gap-9'>
             <h1 className='text-2xl font-bold text-dark-purple'>
               {idProduct ? 'Editar Produto' : 'Adicionar Produto'}
             </h1>
