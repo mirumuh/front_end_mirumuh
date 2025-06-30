@@ -163,13 +163,18 @@ const ModalFormularioProduto = ({
     return files.map((file, index) => {
       const prefix = index === 0 ? 'PTBR_' : 'EN_'
 
-      // Cria o novo nome usando o título
-      const sanitizedTitle = titulo.replace(/\s+/g, '_')
+      // Remove acentos e substitui espaços por underscores
+      const sanitizedTitle = titulo
+        .normalize('NFD') // Decompõe caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, '') // Remove marcas de acento
+        .replace(/\s+/g, '_') // Substitui espaços por underscores
+
       const newFileName = `${prefix}${sanitizedTitle}.pdf`
 
       const renamedFile = new File([file], newFileName, {
         type: file.type,
       })
+
       return renamedFile
     })
   }
