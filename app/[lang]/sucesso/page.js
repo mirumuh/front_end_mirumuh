@@ -78,7 +78,9 @@ const Sucesso = () => {
 
   useEffect(() => {
     const sendEmailTo = async () => {
-      const emailSent = sessionStorage.getItem('emailSent')
+      const emailKey = `emailSent_${recipeNameWithoutAccents}`
+      const emailSent = sessionStorage.getItem(emailKey)
+
       if (!emailSent) {
         try {
           const fileIds = [
@@ -94,7 +96,7 @@ const Sucesso = () => {
           }
 
           await sendEmail(data)
-          sessionStorage.setItem('emailSent', 'true')
+          sessionStorage.setItem(emailKey, 'true')
         } catch (error) {
           console.error('Erro ao enviar email com os PDFs:', error)
         }

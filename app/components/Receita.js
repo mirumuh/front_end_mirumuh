@@ -14,8 +14,7 @@ const Receita = ({ receita }) => {
             receita?.images[0]
               ? {
                   transform: 'scale(2)',
-                  objectFit: 'fill',
-                  transformOrigin: 'center 70% 20px',
+                  objectFit: 'contain',
                 }
               : {}
           }
